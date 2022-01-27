@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1091796918755",
+    "project_id": "my-university-finder",
+    "storage_bucket": "my-university-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091796918755:android:904d6bcdf91dfce01840d6",
+        "android_client_info": {
+          "package_name": "com.example.dream_university_finder_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091796918755-hmvr4d732otkkoq97lllk1f3vdhr1bgh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dream_university_finder_app",
+            "certificate_hash": "671103e8df56e07ffc708dd80ccc760339e49cea"
+          }
+        },
+        {
+          "client_id": "1091796918755-679bghmkp74v1kc7r53k20tdl30c3pgk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX-ZjRi32DcmqiF-C7QXeZe4XTADKx9kQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091796918755-679bghmkp74v1kc7r53k20tdl30c3pgk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

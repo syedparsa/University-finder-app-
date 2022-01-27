@@ -1,0 +1,29 @@
+{
+  "authorities": [
+    {
+      "type": "AAD",
+      "audience": {
+        "type": "AzureADMyOrg",
+        "tenant_id": "organizations"
+      }
+    }
+  ],
+  "client_id": "c2b2e10e-a12a-488e-b458-60c03fe7dcff",
+  "redirect_uri" : "msauth://com.example.dream_university_finder_app/lvGC0B4SWYU8tNPHg%2FbdMjQinZQ%3D",
+  "authorization_user_agent": "DEFAULT",
+  "minimum_required_broker_protocol_version": "3.0",
+  "multiple_clouds_supported": false,
+  "broker_redirect_uri_registered": true,
+  "environment": "Production",
+  "http": {
+    "connect_timeout": 10000,
+    "read_timeout": 30000
+  },
+  "logging": {
+    "pii_enabled": false,
+    "log_level": "WARNING",
+    "logcat_enabled": true
+  },
+  "account_mode": "MULTIPLE"
+
+}
