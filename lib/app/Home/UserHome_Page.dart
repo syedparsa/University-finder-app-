@@ -66,7 +66,7 @@ class _UserHomePageState extends State<UserHomePage> {
 
   Map<Tabitems, WidgetBuilder> get widgetBuilders {
     final manger = Provider.of<AuthBase>(context, listen:false);
-    print(manger.endUser!);
+
     return {
 
       Tabitems.Settings: (_) => const AccountPage(),

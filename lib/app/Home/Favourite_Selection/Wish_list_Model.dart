@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dream_university_finder_app/Services/Database.dart';
 import 'package:dream_university_finder_app/app/Home/Campuses/Campus_List_Tiles.dart';
 import 'package:dream_university_finder_app/app/Home/Campuses/List_Items_Builder.dart';
@@ -19,11 +21,11 @@ class WishListPage extends StatefulWidget {
 class _WishListPageState extends State<WishListPage> {
   Stream<List<Campuses>> camplist = Stream.value([]);
   Stream<List<Hosts>> hostlist = Stream.value([]);
-
+  var _streamController = StreamController<List<Campuses>>();
 
    bool? isSaved;
 
-  Future<Stream<List<Campuses>>> getFavcampus() async {
+   getFavcampus() async {
     final db = Provider.of<Database>(context, listen: false);
     var places = widget.user!.savedcampIds;
     if (places == null) return Stream.value([]);
@@ -31,7 +33,7 @@ class _WishListPageState extends State<WishListPage> {
 
     List<Campuses> newcampus =
         attractions.where((element) => places.contains(element.id!)).toList();
-    return Stream.value(newcampus);
+     _streamController.sink.add(newcampus);
   }
 
   Future<Stream<List<Hosts>>> getFavHost() async {
@@ -50,10 +52,8 @@ class _WishListPageState extends State<WishListPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      var camp = await  getFavcampus();
-      setState(() {
-        this.camplist  = camp;
-      });
+      await  getFavcampus();
+
     });
   }
 
@@ -119,16 +119,14 @@ Widget  _HostStreambuilder(BuildContext context) {
   @override
   Widget build(BuildContext context) {
     if (Campuses.isSavedChanged) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) async {
-        var camplist = await getFavcampus();
-        setState(() {
-          this.camplist = camplist;
-        });
+      WidgetsBinding.instance?.addPostFrameCallback((_) async
+     {      await getFavcampus();
+
       });
       Campuses.isSavedChanged = false;
     }
 
-    if (Hosts.isSavedChanged) {
+   /* if (Hosts.isSavedChanged) {
 
       WidgetsBinding.instance?.addPostFrameCallback((_) async {
         var hostlist = await getFavHost();
@@ -138,7 +136,7 @@ Widget  _HostStreambuilder(BuildContext context) {
         });
       });
       Campuses.isSavedChanged = false;
-    }
+    }*/
     return Scaffold(
       appBar:AppBar (
         centerTitle: true,

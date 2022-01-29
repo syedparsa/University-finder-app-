@@ -2,9 +2,10 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dream_university_finder_app/Services/Database.dart';
 import 'package:dream_university_finder_app/app/Home/Campuses/Campus_List_Tiles.dart';
 import 'package:dream_university_finder_app/app/Home/Campuses/List_Items_Builder.dart';
-import 'package:dream_university_finder_app/app/Home/Dashboard/Search_bar_widget.dart';
 import 'package:dream_university_finder_app/app/Home/Description_Page/Campus_Description_Tiles.dart';
+import 'package:dream_university_finder_app/app/Home/Description_Page/Hosts_Descriptions_Tiles.dart';
 import 'package:dream_university_finder_app/app/Home/Hosts/Host_List_Tiles.dart';
+import 'package:dream_university_finder_app/app/Home/Notifications/AwesomeNotificationsService.dart';
 import 'package:dream_university_finder_app/app/Home/models/Campus_Model.dart';
 import 'package:dream_university_finder_app/app/Home/models/Host_Models.dart';
 import 'package:dream_university_finder_app/common_widgets/sign_in/sign_in_Button.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key, this.camp, this.host}) : super(key: key);
@@ -43,7 +43,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Padding(
               padding: EdgeInsets.only(left: 180, top: 50),
               child: ElevatedButton.icon(
-                onPressed: () => (){},
+                onPressed: () => _Alertcall(),
                 icon: Icon(
                   Icons.add_alert,
                   color: Colors.red.shade600,
@@ -86,7 +86,8 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             buidlCampusStream(),
 
-            const SizedBox(height: 100.0),
+             SizedBox(height: 10.0),
+             buidlHostStream()
 
           ],
         ),
@@ -128,6 +129,40 @@ class _DashboardPageState extends State<DashboardPage> {
       },
     ) ;
   }
+  buidlHostStream(){
+    final database = Provider.of<Database>(context, listen: false);
+    return StreamBuilder<List<Hosts>>(
+      stream: database.HostsStream(),
+      builder: (context, snapshot) {
+        return ListItemBuilder<Hosts>(
+          snapshot: snapshot,
+          itembuilder: (context, host) => Dismissible(
+            background: Container(
+              color: Colors.red,
+            ),
+            key: Key('host-${host.id}'),
+
+            child: Column(
+              children:[
+                HostsTiles(
+                    host: host,
+                    onTap: () {
+                      Navigator.of(context, rootNavigator: true)
+                          .push(MaterialPageRoute(
+                        builder: (context) {
+                          return HostDescriptionTiles(host: host, onTap: () {});
+                        },
+                      ));
+                    }),
+
+
+
+              ],),
+          ),
+        );
+      },
+    ) ;
+  }
 
 
   Widget _buildContent(BuildContext context) {
@@ -153,7 +188,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   }
 
-  /*_Alertcall() {
+  _Alertcall() {
     AwesomeNotifications().isNotificationAllowed().then(
       (isAllowed) {
         if (isAllowed) {
@@ -174,7 +209,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 TextButton(
                   onPressed: () => {
-                  *//*  Awesomenotificationservice.createEducationNotification(*//*
+                    AwesomeNotificationService.createEducationFoodNotification(
                         context),
                     Navigator.pop(context) as Navigator,
                   },
@@ -193,7 +228,7 @@ class _DashboardPageState extends State<DashboardPage> {
         }
       },
     );
-  }*/
+  }
 
 
 

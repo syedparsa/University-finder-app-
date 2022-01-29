@@ -13,7 +13,7 @@ class EndUser with ChangeNotifier {
   List<String?>? savedHostIds = [];
 
   factory EndUser.fromMap(Map<String, dynamic> data, String documentId) {
-    final String email = data['email'];
+    final String? email = data['email'];
 
     final List<String?>? savedcampIds = data['savedcampIds'] != null
         ? (data['savedcampIds'] as List).map((e) => e as String).toList()
