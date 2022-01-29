@@ -1,6 +1,5 @@
 
 import 'package:dream_university_finder_app/Services/notification_service.dart';
-import 'package:dream_university_finder_app/app/Home/Notification/Awesome-Notification-Service.dart';
 import 'package:dream_university_finder_app/app/Registration_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ Future<void> main() async {
 
 
  /* await NotificationService().init();*/
-  await Awesomenotificationservice();
+ /* await Awesomenotificationservice();*/
   await Firebase.initializeApp();
   runApp(MyApp());
 }
