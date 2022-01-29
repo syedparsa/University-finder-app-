@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class AccountPage extends StatefulWidget {
@@ -49,402 +50,407 @@ class _AccountPageState extends State<AccountPage> {
 
   Widget _buildUserinfo(User? user) {
     return Container(
-     height: 80,
+      height: 80,
       margin: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-            children: [
-
-              AvatarPage(
-                Photourl: user!.photoURL,
-                radius: 37,
-              ),
-              if (user.displayName != null)
-                Text(
-                  user.displayName!,
-                  style: const TextStyle(color: Colors.white,
-                      fontSize: 15),
-                ),
-
-
-
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          AvatarPage(
+            Photourl: user!.photoURL,
+            radius: 37,
+          ),
+          if (user.displayName != null)
+            Text(
+              user.displayName!,
+              style: const TextStyle(color: Colors.white, fontSize: 15),
+            ),
         ],
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final auth = Provider.of<AuthBase>(context, listen: false);
+  void _deleteUserAccount(AuthBase auth) async {
+    try {
+      await auth.deleteUserAccount();
 
-    return
-     Container(
+      Fluttertoast.showToast(msg: 'Account Deleted Successfully!');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login')
+        Fluttertoast.showToast(msg: 'Please Login again to Delete Account!');
+    }
+  }
 
+  void _FeedBack() async {
 
 
-        color: Colors.blueGrey.shade300,
-        child: Column(
-          children: [
+      Fluttertoast.showToast(msg: 'write us email at syedzeshan786512@gmail.com!');
 
+    }
+  void _Contribute() async {
 
-                 SizedBox(height: 60.0),
 
-
-               Row(
-                 children:const [
-
-                   Expanded(
-
-                     child: Padding(
-                       padding: EdgeInsets.only(left: 20),
-                       child: Text('Settings',textAlign: TextAlign.left,
-                  style:
-                  TextStyle(fontWeight: FontWeight.bold,fontSize: 30,color: Colors.white),),
-                     ),
-                   ),
-               ],),
-
-                 Container(
-
-                  margin: EdgeInsets.only(top:7),
-                  decoration: BoxDecoration(
-                      borderRadius:
-                      BorderRadius.horizontal(left: Radius.elliptical(5, 10),
-                        right: Radius.elliptical(5, 10),
-                      ),
-                      color: Colors.black12,
-                      boxShadow: shadowlist
-
-                  ),
-                    child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                          Expanded(child:
-                        _buildUserinfo(auth.currentUser),  ),
-                      ],
-
-
-                    ),
-
-                ),
-            SizedBox(height: 40.0),
-            Container(
-
-
-              margin: EdgeInsets.only(top: 10.0),
-              decoration: BoxDecoration(
-                borderRadius:
-                BorderRadius.horizontal(left: Radius.elliptical(5, 10),
-                  right: Radius.elliptical(5, 10),
-
-                ),
-
-                boxShadow: shadowlist,),
-
-              child: Material(
-
-                color:  Colors.black12,
-                child:
-
-                Row(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    Padding(
-
-                      padding: EdgeInsets.only(left:15),
-                      child: IconButton(
-                        icon: Icon(Icons.person,size: 40,), onPressed: () {  },
-                      ),
-                    ),
-
-
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text('Profile',textAlign: TextAlign.right,
-                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,
-                          ),),
-                      ),
-                    ),
-
-
-                  ],),
-
-
-
-              ),
-
-
-
-            ),
-
-            Container(
-
-              margin: EdgeInsets.only(top: 0.5),
-
-              decoration: BoxDecoration(
-
-                borderRadius:
-                BorderRadius.horizontal(left: Radius.elliptical(5, 10),
-                  right: Radius.elliptical(5, 10),
-
-                ),
-
-                boxShadow: shadowlist,),
-
-              child: Material(
-
-                color:  Colors.black12,
-                child:
-
-                Row(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    Padding(
-
-                      padding: EdgeInsets.only(left:15),
-                      child: IconButton(
-                        icon: Icon(Icons.message,size: 40,color: Colors.black,), onPressed: () {  },
-                      ),
-                    ),
-
-                    Expanded(
-                      flex: 10,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Text('FeedBack',textAlign: TextAlign.right,
-                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,
-                          ),),
-                      ),
-                    ),
-
-
-                  ],),
-
-
-
-              ),
-
-
-
-            ),
-            Container(
-
-              margin: EdgeInsets.only(top: 0.5),
-
-              decoration: BoxDecoration(
-
-                borderRadius:
-                BorderRadius.horizontal(left: Radius.elliptical(5, 10),
-                  right: Radius.elliptical(5, 10),
-
-                ),
-
-                boxShadow: shadowlist,),
-
-              child: Material(
-
-                color:  Colors.black12,
-                child:
-
-                Row(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    Padding(
-
-                      padding: EdgeInsets.only(left:15),
-                      child: IconButton(
-                        icon: Icon(Icons.style,size: 40,color: Colors.black,), onPressed: () {  },
-                      ),
-                    ),
-
-                    Expanded(
-                      flex: 10,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Text('Contribution',textAlign: TextAlign.right,
-                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,
-                          ),),
-                      ),
-                    ),
-
-
-                  ],),
-
-
-
-              ),
-
-
-
-            ),
-
-            SizedBox(height: 80),
-            Container(
-
-              margin: EdgeInsets.only(top: 0.5),
-
-              decoration: BoxDecoration(
-
-                borderRadius:
-                BorderRadius.horizontal(left: Radius.elliptical(5, 10),
-                  right: Radius.elliptical(5, 10),
-
-                ),
-
-                boxShadow: shadowlist,),
-
-              child: Material(
-
-                color:  Colors.black12,
-                child:
-
-                Row(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    Padding(
-
-                      padding: EdgeInsets.only(left:15),
-                      child: IconButton(
-                        icon: Icon(Icons.favorite,size: 40,color: Colors.black,), onPressed: () {  },
-                      ),
-                    ),
-
-                    Expanded(
-                      flex: 10,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Text('Tell a Friend',textAlign: TextAlign.right,
-                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,
-                          ),),
-                      ),
-                    ),
-
-
-                  ],),
-
-
-
-              ),
-
-
-
-            ),
-            Container(
-
-
-              margin: EdgeInsets.only(top: 0.5),
-              decoration: BoxDecoration(
-                  borderRadius:
-                  BorderRadius.horizontal(left: Radius.elliptical(5, 10),
-                    right: Radius.elliptical(5, 10),
-
-                  ),
-
-                  boxShadow: shadowlist,),
-
-              child: Material(
-
-                color:  Colors.black12,
-                child:
-
-                        Row(
-
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                            Padding(
-
-                             padding: EdgeInsets.only(left:15),
-                             child: IconButton(
-                               icon: Icon(Icons.help_center,size: 40,), onPressed: () {  },
-                       ),
-                           ),
-
-
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text('need Help',textAlign: TextAlign.right,
-                              style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,
-                              ),),
-                          ),
-                        ),
-
-
-                      ],),
-
-
-
-                    ),
-
-
-
-              ),
-
-
-
-
-
-
-            Padding(
-              padding: EdgeInsets.only(right: 15),
-              child: Container(
-
-
-                margin: EdgeInsets.only(top: 100.0),
-                decoration: BoxDecoration(
-                  borderRadius:BorderRadius.zero,
-
-
-                  ),
-
-                child:
-
-                  Row(
-
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-
-                      Material(
-                        color:  Colors.transparent,
-                        child: Padding(
-                          padding: EdgeInsets.all( 10),
-                          child: IconButton(
-                            onPressed:()=> _confirmSignout(context),
-                            icon: Icon(Icons.logout,size: 40,) ,),
-                        ),
-                      ),
-
-
-                    ],),
-
-
-
-                ),
-            ),
-
-
-
-
-
-
-
-
-          ],),
-      );
+    Fluttertoast.showToast(msg: 'Coming soon');
 
   }
 
 
+  @override
+  Widget build(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
+    return Container(
+      color: Colors.blueGrey.shade300,
+      child: Column(
+        children: [
+          SizedBox(height: 60.0),
+          Row(
+            children: const [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    'Settings',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 7),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.horizontal(
+                  left: Radius.elliptical(5, 10),
+                  right: Radius.elliptical(5, 10),
+                ),
+                color: Colors.black12,
+                boxShadow: shadowlist),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: _buildUserinfo(auth.currentUser),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 40.0),
+          Container(
+            margin: EdgeInsets.only(top: 10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.elliptical(5, 10),
+                right: Radius.elliptical(5, 10),
+              ),
+              boxShadow: shadowlist,
+            ),
+            child: Material(
+              color: Colors.black12,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 15),
+
+                      child: ElevatedButton.icon(
+                        onPressed: () => _deleteUserAccount(auth),
+                        icon:Padding(
+                          padding: EdgeInsets.only(right: 5),
+                          child: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                          size: 18,
+                        ),),
+                        label: Text(
+                          'Delete Account',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.black12),
+                            padding:
+                                MaterialStateProperty.all(EdgeInsets.only(right:15)),
+                            shape:
+                                MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.horizontal(left: Radius.elliptical(5, 10),
+                                            right: Radius.elliptical(5, 10) ),
+                                        side: BorderSide(
+                                            color: Colors.transparent)))),
+                      ),
+
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 0.5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.elliptical(5, 10),
+                right: Radius.elliptical(5, 10),
+              ),
+              boxShadow: shadowlist,
+            ),
+            child: Material(
+              color: Colors.black12,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 15),
+                    child: ElevatedButton.icon(
+                      onPressed: () => _FeedBack(),
+                      icon:Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Icon(
+                        Icons.message,
+                        color: Colors.black,
+                        size: 18,
+                      ),),
+                      label: Text(
+                        'Feedback',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all(Colors.black12),
+                          padding:
+                          MaterialStateProperty.all(EdgeInsets.only(right:15)),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.horizontal(left: Radius.elliptical(5, 10),
+                                      right: Radius.elliptical(5, 10) ),
+                                  side: BorderSide(
+                                      color: Colors.transparent)))),
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 0.5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.elliptical(5, 10),
+                right: Radius.elliptical(5, 10),
+              ),
+              boxShadow: shadowlist,
+            ),
+            child: Material(
+              color: Colors.black12,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 15),
+                    child: ElevatedButton.icon(
+                      onPressed: () => _Contribute(),
+                      icon: Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 5),
+                          child:Icon(
+                          Icons.style,
+                          color: Colors.black,
+                          size: 18,
+                        ),
+                      ),),
+                      label: Text(
+                        'Contribute',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all(Colors.black12),
+                          padding:
+                          MaterialStateProperty.all(EdgeInsets.only(right:15)),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.horizontal(left: Radius.elliptical(5, 10),
+                                      right: Radius.elliptical(5, 10) ),
+                                  side: BorderSide(
+                                      color: Colors.transparent)))),
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 80),
+          Container(
+            margin: EdgeInsets.only(top: 0.5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.elliptical(5, 10),
+                right: Radius.elliptical(5, 10),
+              ),
+              boxShadow: shadowlist,
+            ),
+            child: Material(
+              color: Colors.black12,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 15),
+                    child: ElevatedButton.icon(
+                      onPressed: () => (){},
+                      icon:Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child:
+                      Icon(
+                        Icons.favorite,
+                        color: Colors.black,
+                        size: 18,
+                      ),),
+                      label: Text(
+                        'Tell a Friend',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all(Colors.black12),
+                          padding:
+                          MaterialStateProperty.all(EdgeInsets.only(right:15)),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.horizontal(left: Radius.elliptical(5, 10),
+                                      right: Radius.elliptical(5, 10) ),
+                                  side: BorderSide(
+                                      color: Colors.transparent)))),
+                    ),
+                  ),
+
+
+                ],
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 0.5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.elliptical(5, 10),
+                right: Radius.elliptical(5, 10),
+              ),
+              boxShadow: shadowlist,
+            ),
+            child: Material(
+              color: Colors.black12,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 15),
+                    child: ElevatedButton.icon(
+                      onPressed: () => _FeedBack(),
+                      icon: Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child:Icon(
+                        Icons.help,
+                        color: Colors.black,
+                        size: 18,
+                      ),),
+                      label: Text(
+                        'Need help?',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all(Colors.black12),
+                          padding:
+                          MaterialStateProperty.all(EdgeInsets.only(right:15)),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.horizontal(left: Radius.elliptical(5, 10),
+                                      right: Radius.elliptical(5, 10) ),
+                                  side: BorderSide(
+                                      color: Colors.transparent)))),
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Container(
+              margin: EdgeInsets.only(top: 100.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.zero,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Material(
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: ElevatedButton.icon(
+                        onPressed: () => _confirmSignout(context),
+                        icon: Icon(
+                          Icons.logout,
+                          color: Colors.black,
+                          size: 18,
+                        ),
+                        label: Text(
+                          'log out',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                            MaterialStateProperty.all(Colors.black12),
+                            padding:
+                            MaterialStateProperty.all(EdgeInsets.only(right:15)),
+                            shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(left: Radius.elliptical(5, 10),
+                                        right: Radius.elliptical(5, 10) ),
+                                    side: BorderSide(
+                                        color: Colors.transparent)))),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

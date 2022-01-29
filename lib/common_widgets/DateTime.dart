@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dream_university_finder_app/app/Home/job-entries-code/job_entries/format.dart';
+import 'package:dream_university_finder_app/common_widgets/format.dart';
 import 'package:dream_university_finder_app/common_widgets/input_dropdown.dart';
 import 'package:flutter/material.dart';
 

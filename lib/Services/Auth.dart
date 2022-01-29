@@ -1,3 +1,4 @@
+import 'package:dream_university_finder_app/app/Home/models/user_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -13,21 +14,38 @@ abstract class AuthBase {
 
   Future<User?> FacebookLogIn();
 
+  void setEnduser(EndUser user);
+
   Future<User?> RegisterUserWithEmail(String email, String password);
 
   Future<User?> SignInWithEmailPass(String email, String password);
 
   Future<void> signOut();
+
+  Future<void> deleteUserAccount();
+
+  EndUser? get endUser;
 }
 
 class Auth implements AuthBase {
   final _fireAuth = FirebaseAuth.instance;
+
+  EndUser? _endUser;
+
+  EndUser? get endUser => _endUser;
+
+  void setEnduser(EndUser user) => _endUser = user;
 
   @override
   Stream<User?> authStateChanges() => _fireAuth.authStateChanges();
 
   @override
   User? get currentUser => _fireAuth.currentUser;
+
+  @override
+  Future<void> deleteUserAccount() async {
+    await _fireAuth.currentUser!.delete();
+  }
 
   @override
   Future<User?> signInAnonymously() async {
@@ -91,9 +109,6 @@ class Auth implements AuthBase {
 
   @override
   Future<User?> SignInWithEmailPass(String email, String password) async {
-
-
-
     final userCredentails = await _fireAuth.signInWithCredential(
         EmailAuthProvider.credential(email: email, password: password));
 

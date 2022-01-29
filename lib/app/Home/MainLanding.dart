@@ -38,10 +38,7 @@ class _MainPageState extends State<MainPage> {
         : Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("resources/images/bg.jpg"),
-            fit: BoxFit.cover,
-          ),
+
         ),
         child: Column(
           children: [

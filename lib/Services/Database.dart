@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dream_university_finder_app/Services/Api_Path.dart';
 import 'package:dream_university_finder_app/Services/Services_FireStore.dart';
-import 'package:dream_university_finder_app/Services/User.dart';
 import 'package:dream_university_finder_app/app/Home/models/Campus_Entry_Model.dart';
 import 'package:dream_university_finder_app/app/Home/models/Courses_Model.dart';
 import 'package:dream_university_finder_app/app/Home/models/Host_Entry_Model.dart';
@@ -10,18 +9,15 @@ import 'package:dream_university_finder_app/app/Home/models/Host_Models.dart';
 import 'package:dream_university_finder_app/app/Home/models/Campus_Model.dart';
 import 'package:dream_university_finder_app/app/Home/models/Job.dart';
 import 'package:dream_university_finder_app/app/Home/models/entry.dart';
+import 'package:dream_university_finder_app/app/Home/models/user_Model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 abstract class Database {
-  Future<void> DeleteJob(Job job);
+  Future<String> uploadImage(File image, String imagePath);
 
-  Future<void> SetJob(Job job);
-  Future<String>  uploadImage(File image, String imagePath );
-  Future<void> deleteImage(String imagePath  );
-  Future<String>  downloadImage(String imagePath  );
+  Future<void> deleteImage(String imagePath);
 
-
-  Stream<List<Job>> jobsStream();
+  Future<String> downloadImage(String imagePath);
 
   Future<void> SetCampus(Campuses uni);
 
@@ -59,21 +55,17 @@ abstract class Database {
 
   Stream<List<Entry>> jobentriesStream({Job? job});
 
+  Future<void> deleteUser(EndUser user, String uid);
 
+  Future<void> setUser(EndUser user, String uid);
 
-  Future<void> deleteUser(MyUser user, String uid);
-
-  Future<void> setUser(MyUser user, String uid);
-
-  Stream<List<MyUser>> usersStream();
-
-
+  Stream<List<EndUser>> usersStream();
 }
 
 String DocumentIDfromCurrentDate() => DateTime.now().toIso8601String();
 
 class FirestoreDatabase implements Database {
-  FirestoreDatabase({ this.uid});
+  FirestoreDatabase({this.uid});
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -81,89 +73,41 @@ class FirestoreDatabase implements Database {
 
   final _service = FirestoreService.instance;
 
-  @override
-  Future<void> SetJob(Job job) => _service.setData(
-        path: APIPATH.job(uid!, job.id),
-        data: job.toMap(),
-      );
-
-  @override
-  Future<void> DeleteJob(Job job) async {
-    // delete where entry.jobId == job.jobId
-    final allEntries = await jobentriesStream(job: job).first;
-    for (Entry entry in allEntries) {
-      if (entry.jobId == job.id) {
-        await deletejobEntry(entry);
-      }
-    }
-    await _service.deleteData(path: APIPATH.job(uid!, job.id));
-  }
-
-  @override
-  Stream<List<Job>> jobsStream() => _service.collectionStream(
-        path: APIPATH.jobs(uid!),
-        builder: (data, docmentId) => Job.fromMap(data, docmentId),
-      );
-
 //TODO:USER:
   @override
-  Future<void> deleteUser(MyUser user, String uid) => _service.deleteData(
-    path: APIPATH.user(uid),
-  );
+  Future<void> deleteUser(EndUser user, String uid) => _service.deleteData(
+        path: APIPATH.user(uid),
+      );
 
   @override
-  Future<void> setUser(MyUser user, String uid) => _service.setData(
-    path: APIPATH.user(uid),
-    data: user.toMap(),
-  );
+  Future<void> setUser(EndUser user, String uid) => _service.setData(
+        path: APIPATH.user(uid),
+        data: user.toMap(),
+      );
 
   @override
-  Stream<List<MyUser>> usersStream() => _service.collectionStream(
-    path: APIPATH.users(),
-    builder: (data, documentId) => MyUser.fromMap(data, documentId),
-  );
-
-
-
-
-
-
-  @override
-  Future<void> Setwhishlist(Campuses wish) => _service.setData(
-    path: APIPATH.whishlist(uid!, wish.id!),
-    data: wish.toMap(),
-  );
-
-
-  @override
-  Future<void> Deletewhishlist(Courses wish) => _service.deleteData(
-    path: APIPATH.whishlist(uid!, wish.id),
-  );
-
-  @override
-  Stream<List<Campuses>> whishlistStream() => _service.collectionStream(
-    path: APIPATH.whishlists(uid!),
-    builder: (data, docmentId) => Campuses.fromMap(data, docmentId),
-  );
-
+  Stream<List<EndUser>> usersStream() => _service.collectionStream(
+        path: APIPATH.users(),
+        builder: (data, documentId) => EndUser.fromMap(data, documentId),
+      );
 
 
 //TODO:University manual database
   @override
   Future<void> SetCampus(Campuses uni) => _service.setData(
-        path: APIPATH.campus(uid!, uni.id!),
+        path: APIPATH.campus(uni.id!),
         data: uni.toMap(),
       );
 
   @override
   Future<void> SetHost(Hosts host) => _service.setData(
-        path: APIPATH.host(uid!, host.id),
+        path: APIPATH.host(host.id),
         data: host.toMap(),
       );
 
   @override
   Future<void> SetCourse(Courses course) => _service.setData(
-        path: APIPATH.course(uid!, course.id),
+        path: APIPATH.course(course.id),
         data: course.toMap(),
       );
 
@@ -177,13 +121,13 @@ class FirestoreDatabase implements Database {
     }
 
     await _service.deleteData(
-      path: APIPATH.campus(uid!, uni.id!),
+      path: APIPATH.campus(uni.id!),
     );
   }
 
   @override
   Future<void> DeleteCourse(Courses course) => _service.deleteData(
-        path: APIPATH.course(uid!, course.id),
+        path: APIPATH.course(course.id),
       );
 
   @override
@@ -197,7 +141,7 @@ class FirestoreDatabase implements Database {
     await*/
       =>
       _service.deleteData(
-        path: APIPATH.host(uid!, host.id),
+        path: APIPATH.host(host.id),
       );
 
   @override
@@ -223,13 +167,13 @@ class FirestoreDatabase implements Database {
   //TODO: addding campus enteries
   @override
   Future<void> setcampusEntry(campusEntry entry) => _service.setData(
-        path: APIPATH.entry(uid!, entry.id),
+        path: APIPATH.entry(entry.id),
         data: entry.toMap(),
       );
 
   @override
   Future<void> deletecampusEntry(campusEntry entry) => _service.deleteData(
-        path: APIPATH.entry(uid!, entry.id),
+        path: APIPATH.entry(entry.id),
       );
 
   @override
@@ -265,13 +209,13 @@ class FirestoreDatabase implements Database {
 
   @override
   Future<void> setjobEntry(Entry entry) => _service.setData(
-        path: APIPATH.entry(uid!, entry.id),
+        path: APIPATH.entry(entry.id),
         data: entry.toMap(),
       );
 
   @override
   Future<void> deletejobEntry(Entry entry) => _service.deleteData(
-        path: APIPATH.entry(uid!, entry.id),
+        path: APIPATH.entry(entry.id),
       );
 
   @override
@@ -287,19 +231,19 @@ class FirestoreDatabase implements Database {
 
   @override
   Future<void> deleteImage(String imagePath) async {
-    var storageRef = storage.ref().child(imagePath) ;
-     await storageRef.delete();
+    var storageRef = storage.ref().child(imagePath);
+    await storageRef.delete();
   }
 
   @override
   Future<String> downloadImage(String imagePath) async {
-    var storageRef = storage.ref().child(imagePath) ;
+    var storageRef = storage.ref().child(imagePath);
     return await storageRef.getDownloadURL();
   }
 
   @override
   Future<String> uploadImage(File image, String imagePath) async {
-    var storageRef = storage.ref().child(imagePath) ;
+    var storageRef = storage.ref().child(imagePath);
     var uploadTask = await storageRef.putFile(image);
     return await uploadTask.ref.getDownloadURL();
   }

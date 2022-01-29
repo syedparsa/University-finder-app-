@@ -3,13 +3,14 @@ import 'dart:ffi';
 import 'package:dream_university_finder_app/Services/Auth.dart';
 
 import 'package:dream_university_finder_app/common_widgets/custom_Exception_alert.dart';
+import 'package:dream_university_finder_app/common_widgets/sign_in/Email_SignIn_BlocBased.dart';
 import 'package:dream_university_finder_app/common_widgets/sign_in/Sign_In_Manger.dart';
+import 'package:dream_university_finder_app/common_widgets/sign_in/Sign_in_With_Email.dart';
 import 'package:dream_university_finder_app/common_widgets/sign_in/sign_in_Button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
-import 'Sign_in_With_Email.dart';
 
 class InstituteSignInPage extends StatelessWidget {
   const InstituteSignInPage({Key? key, required this.manger, required this.isLoading}) : super(key: key);

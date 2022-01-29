@@ -4,7 +4,7 @@ class EmptyContent extends StatelessWidget {
   const EmptyContent({Key? key,
 
     this.title='Nothing here',
-    this.message='Please add your Campuses and Courses',
+    this.message='try adding your Institutes list',
   }) : super(key: key);
 
 

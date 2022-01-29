@@ -52,23 +52,24 @@ class _EditCampusPageState extends State<EditCampusPage> {
 
   int? _CountryRanking = 0;
   int? _worldRanking = 0;
+  String? _website;
   String? _imageUrl;
-
+  String? _url;
   String? _countrycode;
 
-  _deleteImage() async {
-    if (_imageUrl != null) {
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      final db = Provider.of<Database>(context, listen: false);
-
-      String uid = auth.currentUser!.uid;
-      await db.deleteImage('uploads/$uid.jpg');
-      setState(() {
-        _imageUrl = null;
-      });
-      // Fluttertoast.showToast(msg: 'Image Deleted!');
-    }
-  }
+  // _deleteImage() async {
+  //   if (_imageUrl != null) {
+  //     final auth = Provider.of<AuthBase>(context, listen: false);
+  //     final db = Provider.of<Database>(context, listen: false);
+  //
+  //     String uid = auth.currentUser!.uid;
+  //     await db.deleteImage('uploads/' .jpg');
+  //     setState(() {
+  //       _imageUrl = null;
+  //     });
+  //     // Fluttertoast.showToast(msg: 'Image Deleted!');
+  //   }
+  // }
 
   @override
   void initState() {
@@ -86,16 +87,19 @@ class _EditCampusPageState extends State<EditCampusPage> {
       _worldRanking = widget.camp!.worldRanking;
       _imageUrl=widget.camp!.imageurl;
       _countrycode=widget.camp!.countrycode;
+      _website=widget.camp!.website;
+      _url=widget.camp!.url;
 
     }
-    String uid = auth.currentUser!.uid;
     String? url;
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      url = await db.downloadImage('uploads/$uid.' 'jpg');
-      setState(() {
-        if (url != "") _imageUrl = url;
+      url = await db.downloadImage('uploads/'+widget.camp!.id! +'.jpg');
+      if( url != null && url!.isNotEmpty){
 
-      });
+        setState(() {
+          _imageUrl = url;
+        });
+      }
     });
   }
 
@@ -120,12 +124,11 @@ class _EditCampusPageState extends State<EditCampusPage> {
   //     _imageUrl = taskSnapshot;
   //   });
   // }
-
+String? id ;
   _updateImage(var _image) async {
-    final auth = Provider.of<AuthBase>(context, listen: false);
+    id = widget.camp?.id ?? DocumentIDfromCurrentDate();
     final db = Provider.of<Database>(context, listen: false);
-    String uid = auth.currentUser!.uid;
-    String downloadeUrl = await db.uploadImage(_image, 'uploads/$uid.' 'jpg');
+    String downloadeUrl = await db.uploadImage(_image, 'uploads/$id!.' 'jpg');
 
     setState(() {
       _imageUrl = downloadeUrl;
@@ -198,8 +201,10 @@ class _EditCampusPageState extends State<EditCampusPage> {
               title: 'Name already used',
               content: 'Please choose different name');
         } else {
-          final id = widget.camp?.id ?? DocumentIDfromCurrentDate();
+
           final camp = Campuses(
+            url: _url,
+            website: _website,
             countrycode: _countrycode,
               imageurl: _imageUrl,
               name: _name,
@@ -348,6 +353,18 @@ class _EditCampusPageState extends State<EditCampusPage> {
           showOnlyCountryWhenClosed: true,
           alignLeft: true,
         ),
+      ),
+      TextFormField(
+        decoration: const InputDecoration(labelText: 'website '),
+        validator: (value) =>
+        value!.isNotEmpty ? null : 'web address can\'t be empty',
+        onSaved: (value) => _website = value!,
+      ),
+      TextFormField(
+        decoration: const InputDecoration(labelText: 'Country '),
+        validator: (value) =>
+        value!.isNotEmpty ? null : 'campus domain can\'t be empty',
+        onSaved: (value) => _url = value!,
       ),
       TextFormField(
         decoration: const InputDecoration(labelText: 'Country '),

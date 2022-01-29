@@ -5,7 +5,7 @@ class NotificationService {
   init() {
     AwesomeNotifications().initialize(
       // set the icon to null if you want to use the default app icon
-        'resource://drawable/res_app_icon',
+        'resource://drawable/apicon',
         [
           NotificationChannel(
               channelGroupKey: 'basic_channel_group',
@@ -23,20 +23,10 @@ class NotificationService {
         ],
         debug: true
     );
-    //
-    // AwesomeNotifications().actionStream.listen(
-    //         (ReceivedNotification receivedNotification) {
-    //       Navigator.of(context).pushNamed(
-    //           '/NotificationPage',
-    //           arguments: {
-    //       'id' : receivedNotification.id
-    //       }
-    //       );
-    //     }
-    // );
+
   }
 
-  show() {
+  show(BuildContext context) {
     AwesomeNotifications().createNotification(
         content: NotificationContent(
             id: 10,
@@ -51,24 +41,27 @@ class NotificationService {
         // friendly dialog box before call the request method.
         // This is very important to not harm the user experience
         AwesomeNotifications().requestPermissionToSendNotifications();
-      } else {
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: 10,
-                channelKey: 'basic_channel',
-                title: 'Simple Notification',
-                body: 'Simple body'
-            )
-        );
       }
+
     });
-    AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 10,
-            channelKey: 'basic_channel',
-            title: 'Simple Notification',
-            body: 'Simple body'
-        )
-    );
+
+
   }
+
+
+
+ Future<void> createnotification() async{
+    await
+    AwesomeNotifications().createNotification(
+  content: NotificationContent(
+  id: 10,
+  channelKey: 'basic_channel',
+  title: 'Simple Notification',
+  body: 'Simple body'
+  )
+  );
+  }
+
+
+
 }

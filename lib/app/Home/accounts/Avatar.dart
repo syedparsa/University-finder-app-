@@ -97,6 +97,10 @@ class _AvatarPageState extends State<AvatarPage> {
               _showPicker(context);
             },
             child: CircleAvatar(
+              radius: radius,
+              backgroundColor: Colors.black12,
+              backgroundImage:
+              Photourl != null ? NetworkImage(Photourl!) : null,
               child: imageFile != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(50),
@@ -118,10 +122,7 @@ class _AvatarPageState extends State<AvatarPage> {
                         color: Colors.grey[800],
                       ),
                     ),
-              radius: radius,
-              backgroundColor: Colors.black12,
-              backgroundImage:
-                  Photourl != null ? NetworkImage(Photourl!) : null,
+
             ),
           ),
         ),

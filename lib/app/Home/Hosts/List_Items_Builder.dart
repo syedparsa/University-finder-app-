@@ -1,5 +1,5 @@
 
-import 'package:dream_university_finder_app/app/Home/Hosts/Empty_Content.dart';
+import 'package:dream_university_finder_app/app/Home/Campuses/Empty_Content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dream_university_finder_app/Services/Database.dart';
 import 'package:dream_university_finder_app/app/Home/Campuses/Campuses_entries/Campus_entry_page.dart';
 import 'package:dream_university_finder_app/app/Home/Campuses/edit_Campus_Page.dart';
-import 'package:dream_university_finder_app/app/Home/Jobs/List_Items_Builder.dart';
 import 'package:dream_university_finder_app/app/Home/models/Campus_Entry_Model.dart';
 import 'package:dream_university_finder_app/app/Home/models/Campus_Model.dart';
 import 'package:dream_university_finder_app/app/Home/models/Host_Models.dart';
@@ -12,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../List_Items_Builder.dart';
 import 'campus_entry_list_item.dart';
 
 

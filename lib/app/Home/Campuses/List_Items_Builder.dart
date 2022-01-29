@@ -25,7 +25,7 @@ class ListItemBuilder<T> extends StatelessWidget {
     print(snapshot.error.toString());
     return const EmptyContent(
       title: 'Something went wrong ',
-      message: 'Can not load the items right now',
+      message: 'Can\'t load the items right now',
     );
     }
     return const Center(

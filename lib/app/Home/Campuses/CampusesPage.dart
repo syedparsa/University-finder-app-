@@ -72,7 +72,7 @@ class CampusesPage extends StatelessWidget {
            direction: DismissDirection.endToStart,
            key: Key('uni-${uni.id}'),
            onDismissed: (direction)=> _delete(context,uni),
-           child: UniListTiles(uni: uni,
+           child: CampusListTiles(uni: uni,
                onTap:  () => CourseEntries.show(context,uni),
            ),
          ),
