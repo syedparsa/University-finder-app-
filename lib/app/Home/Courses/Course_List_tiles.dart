@@ -15,10 +15,11 @@ class CoursesTiles extends StatelessWidget {
       height: 80,
       margin:const EdgeInsets.symmetric(horizontal: 20),
 
-      child: Material(
-        child: InkWell(
-          onTap: onTap,
+
+
+
           child: Container(
+
             decoration: BoxDecoration(color: Colors.blueGrey,
               borderRadius: BorderRadius.circular(20),
               boxShadow: shadowlist,),
@@ -29,7 +30,7 @@ class CoursesTiles extends StatelessWidget {
                 Expanded(child:
                 Column(
                   children: [
-                    Text(course.name,textAlign: TextAlign.center,style: const TextStyle(
+                    Text(course.name!,textAlign: TextAlign.center,style: const TextStyle(
                       fontWeight: FontWeight.w200
                       ,fontSize: 20.0,
                     ),),
@@ -42,8 +43,7 @@ class CoursesTiles extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
+
     );
   }
 }

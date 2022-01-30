@@ -2,16 +2,16 @@ import 'dart:ui';
 
 import 'package:dream_university_finder_app/Services/Auth.dart';
 import 'package:dream_university_finder_app/Services/Database.dart';
-import 'package:dream_university_finder_app/Services/notification_service.dart';
 import 'package:dream_university_finder_app/app/Home/models/Campus_Model.dart';
-import 'package:dream_university_finder_app/app/Home/models/Host_Models.dart';
 import 'package:dream_university_finder_app/app/Home/models/user_Model.dart';
 import 'package:dream_university_finder_app/configuration/helper_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
 
 class CampusDescriptionTiles extends StatelessWidget {
   final Campuses uni;
@@ -26,6 +26,22 @@ class CampusDescriptionTiles extends StatelessWidget {
     this.db,
   }) : super(key: key);
 
+
+  launchURL(String url, String text) async {
+   /* print(url);
+    if (await canLaunch (url)) {
+      await launch(url,
+          enableJavaScript: true, forceSafariVC: false, enableDomStorage: true);
+    } else {
+      Clipboard.setData(
+        ClipboardData(text: uni.address!),
+      ).then(
+            (value) => Fluttertoast.showToast(
+            msg: 'Can\'t Launch ' + text + ', copied to the clipboard!'),
+      );
+    }*/
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,39 +55,44 @@ class CampusDescriptionTiles extends StatelessWidget {
             color: Colors.transparent,
             child: Column(
               children: [
-                InkWell(
-                  onTap: onTap,
-                  child: Container(
-                    height: 400,
-                    decoration: uni.imageurl!= null ? BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(uni.imageurl!),
-                        fit: uni.imageurl == null ? BoxFit.contain : BoxFit.cover,
-                      ),
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: shadowlist,
-                    ) : BoxDecoration(),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                uni.name!,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 50,
-                                ),
-                              ),
-                            ],
-                          ),
+
+                   uni.imageurl != null?
+              InkWell(
+              onTap: launchURL(uni.website!, 'url'),
+              child: Container(
+                      height: 400,
+                      decoration: uni.imageurl!= null ? BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(uni.imageurl!),
+                          fit: uni.imageurl == null ? BoxFit.contain : BoxFit.cover,
                         ),
-                      ],
+                        color: Colors.blueGrey,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: shadowlist,
+                      ) : BoxDecoration(),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+
+                                  uni.name!,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 50,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
+            )
+                  :Container(),
+
                 SizedBox(height: 20),
                 InkWell(
                   onTap: onTap,

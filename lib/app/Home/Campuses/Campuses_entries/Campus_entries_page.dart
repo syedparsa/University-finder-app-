@@ -47,9 +47,10 @@ class CourseEntries extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      backgroundColor: Colors.blueGrey.shade300,
       appBar: AppBar(
-        backgroundColor: const Color(0xff123456),
+        backgroundColor: Colors.blueGrey,
+
         elevation: 2.0,
         title: Text(   camp.name! + " "+'Courses'),
         actions: <Widget>[

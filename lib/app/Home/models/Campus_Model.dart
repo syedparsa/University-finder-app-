@@ -1,7 +1,8 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-class Campuses {
+enum SearchByCampuses { name,  country }
+class Campuses with ChangeNotifier implements Comparable<Campuses> {
   Campuses({
     this.url,
     this.website,
@@ -89,5 +90,13 @@ class Campuses {
       'worldRanking': worldRanking,
       'CountryRanking': CountryRanking,
     };
+  }
+
+
+
+
+  @override
+  int compareTo(Campuses other) {
+    return this.name!.compareTo(other.name!);
   }
 }

@@ -1,5 +1,5 @@
 class Courses {
-  Courses({required this.start, required this.end, required this.comment,
+  Courses({ this.start,  this.end,  this.comment,
     required this.duration,
     required this.CourseFee,
     required this.name,
@@ -14,32 +14,29 @@ class Courses {
 
 
 
-  final DateTime start;
-  final DateTime end;
-  final String comment;
+  final DateTime? start;
+  final DateTime? end;
+  final String? comment;
 
 
 
-  final String name;
-  final String details;
-  final String educationlevel;
-  final String admissionoffer;
-  final String    CourseId;
-  final int    duration;
-  final int CourseFee;
-  final int Credithours;
+  final String? name;
+  final String? details;
+  final String? educationlevel;
+  final String? admissionoffer;
+  final String?    CourseId;
+  final int?    duration;
+  final int? CourseFee;
+  final int? Credithours;
 
 
   final String id;
 
-  double get durationIndays =>
-      end.difference(start).inDays.toDouble() ;
+
 
   factory Courses.fromMap(Map<String, dynamic> data, String documentId) {
 
 
-    final int startMilliseconds = data['start'];
-    final int endMilliseconds = data['end'];
     final String name = data['name'];
     final String details=data['details'];
     final String educationlevel = data['educationlevel'];
@@ -53,8 +50,7 @@ class Courses {
 
 
     return Courses(
-      start: DateTime.fromMillisecondsSinceEpoch(startMilliseconds),
-      end: DateTime.fromMillisecondsSinceEpoch(endMilliseconds),
+
       comment: data['comment'],
 
       name: name,
@@ -75,8 +71,8 @@ class Courses {
   Map<String, dynamic> toMap() {
 
     return {
-      'start': start.millisecondsSinceEpoch,
-      'end': end.millisecondsSinceEpoch,
+      'start': start?.millisecondsSinceEpoch,
+      'end': end?.millisecondsSinceEpoch,
       'comment': comment,
 
       'name': name,

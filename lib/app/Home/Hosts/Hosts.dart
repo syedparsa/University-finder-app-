@@ -43,7 +43,7 @@ class HostsPage extends StatelessWidget {
   Widget build(BuildContext context,) {
    
     return Scaffold(
-
+      backgroundColor: Colors.blueGrey.shade300,
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
         centerTitle: true,

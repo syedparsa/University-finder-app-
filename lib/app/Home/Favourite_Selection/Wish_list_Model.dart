@@ -130,9 +130,9 @@ class _WishListPageState extends State<WishListPage> {
       Campuses.isSavedChanged = false;
     }
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.blueGrey.shade300,
      appBar: AppBar(
-       backgroundColor: Colors.blueGrey.shade300,
+       backgroundColor: Colors.blueGrey,
        centerTitle: true,
        title: Text('Wish List'),
      ),

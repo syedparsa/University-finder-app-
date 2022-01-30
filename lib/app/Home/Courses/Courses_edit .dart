@@ -35,8 +35,7 @@ class CoursesEditPage extends StatefulWidget {
 class _CoursesEditPageState extends State<CoursesEditPage> {
 
   final _formKey = GlobalKey<FormState>();
-  DateTime? _startDate;
-  DateTime? _endDate;
+
   String? _comment;
   String? _name = "";
   String? _details = "";
@@ -52,12 +51,6 @@ class _CoursesEditPageState extends State<CoursesEditPage> {
     super.initState();
 
     if (widget.course != null) {
-      final start = widget.course?.start ?? DateTime.now();
-      _startDate = DateTime(start.year, start.month, start.day);
-
-
-      final end = widget.course?.end ?? DateTime.now();
-      _endDate = DateTime(end.year, end.month, end.day);
 
 
       _comment = widget.course?.comment ?? '';
@@ -102,15 +95,14 @@ class _CoursesEditPageState extends State<CoursesEditPage> {
               title: 'Name/Course ID already used',
               content: 'Please choose unique details');
         } else {
-          final start = DateTime(_startDate!.year, _startDate!.month, _startDate!.day);
-          final end = DateTime(_endDate!.year, _endDate!.month, _endDate!.day);
+
           final id = widget.course?.id  ?? DocumentIDfromCurrentDate();
           final course = Courses(duration: _courseduration!,
               CourseFee: _courseFee!, name: _name!,
               educationlevel: _educationlevel!,
               admissionoffer: _admissionoffer!,
               details: _details!, id: id, CourseId:
-              _courseID!, Credithours: _credithours!, end:end,start: start,
+              _courseID!, Credithours: _credithours!,
               comment: _comment!
             );
           await widget.database.SetCourse(course);
@@ -129,7 +121,7 @@ class _CoursesEditPageState extends State<CoursesEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff123456),
+          backgroundColor: Colors.blueGrey,
         elevation: 2.0,
         title: Text(widget.course == null
             ? 'Register New Course'
@@ -154,13 +146,12 @@ class _CoursesEditPageState extends State<CoursesEditPage> {
               child: Column(
 
                 children:[
+                _buildcontent(),
 
-                  _buildComment(),
-                  _buildStartDate(),
-                  _buildEndDate(),
+
                   Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: _buildform(),
+                  child: _buildComment(),
                 ),
               ],),
             ),
@@ -168,11 +159,11 @@ class _CoursesEditPageState extends State<CoursesEditPage> {
         ),
       ),
 
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.blueGrey.shade300,
     );
   }
 
-  Widget _buildStartDate() {
+ /* Widget _buildStartDate() {
     return CourseDatepicker(
       labelText: 'Start',
       selectedDate: _startDate!,
@@ -180,9 +171,9 @@ class _CoursesEditPageState extends State<CoursesEditPage> {
       selectDate: (value) => setState(() => _startDate = value),
 
     );
-  }
+  }*/
 
-  Widget _buildEndDate() {
+ /* Widget _buildEndDate() {
     return CourseDatepicker(
       labelText: 'End',
       selectedDate: _endDate!,
@@ -190,7 +181,7 @@ class _CoursesEditPageState extends State<CoursesEditPage> {
       selectDate: (value) => setState(() => _endDate = value),
 
     );
-  }
+  }*/
   Widget _buildComment() {
     return TextField(
       keyboardType: TextInputType.text,

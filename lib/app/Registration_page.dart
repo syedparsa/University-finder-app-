@@ -46,7 +46,14 @@ class RegistrationPage extends StatelessWidget {
         ),
         elevation: 10.0,
       ),
-      body: _buildContent(context),
+      body: Container(
+
+        color: Colors.blueGrey.shade300,
+        child: Column(children: [
+          SizedBox(height: 200),
+
+          _buildContent(context)],),
+      ),
 
       backgroundColor: Colors.grey[200],
     );

@@ -196,8 +196,9 @@ class _InstitutecreationState extends State<Institutecreation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
-        backgroundColor: const Color(0xff123456),
+    backgroundColor: Colors.blueGrey,
         elevation: 2.0,
         title: const Text('Register New Institute'),
         actions: <Widget>[
@@ -211,7 +212,7 @@ class _InstitutecreationState extends State<Institutecreation> {
         ],
       ),
       body: _buildcontent(),
-      backgroundColor: Colors.grey[200],
+    backgroundColor: Colors.blueGrey.shade300,
     );
   }
 

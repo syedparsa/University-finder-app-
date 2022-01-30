@@ -139,7 +139,7 @@ class SignInPage extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         child: Text(
           ' Sign up!/Sign In\n  to continue',
-          style: TextStyle(fontSize: 15, color: Colors.grey,fontWeight: FontWeight.bold),
+          style: TextStyle( color: Colors.white,fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
       ),
@@ -201,15 +201,20 @@ class SignInPage extends StatelessWidget {
     final bloc = Provider.of<SignInManger>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff123456),
+        backgroundColor: Colors.blueGrey,
         title: const Text(
           'Dream University Finder',
           textAlign: TextAlign.center,
         ),
         elevation: 10.0,
       ),
-      body: _buildContent(context),
-      backgroundColor: Colors.grey[200],
+      body: Container(
+        color: Colors.blueGrey.shade300,
+        child:Column(
+        children: [
+         SizedBox(height:200),
+        _buildContent(context)],),),
+
     );
   }
 

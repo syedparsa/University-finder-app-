@@ -1,6 +1,6 @@
 
 import 'package:dream_university_finder_app/Services/Database.dart';
-import 'package:dream_university_finder_app/app/Home/Campuses/Campuses_entries/job_entries_page.dart';
+import 'package:dream_university_finder_app/app/Home/Campuses/Campuses_entries/Campus_entries_page.dart';
 import 'package:dream_university_finder_app/app/Home/Courses/Course_List_tiles.dart';
 import 'package:dream_university_finder_app/app/Home/Courses/Courses_edit%20.dart';
 import 'package:dream_university_finder_app/app/Home/Courses/List_Items_Builder.dart';
@@ -33,7 +33,7 @@ class CoursePage extends StatelessWidget {
   Widget build(BuildContext context,) {
    
     return Scaffold(
-
+      backgroundColor: Colors.blueGrey.shade300,
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
         centerTitle: true,
