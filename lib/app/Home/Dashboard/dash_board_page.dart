@@ -13,12 +13,13 @@ import 'package:dream_university_finder_app/configuration/helper_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key, this.camp, this.host}) : super(key: key);
   final Campuses? camp;
-  final Hosts?  host;
+  final Hosts? host;
 
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -30,15 +31,14 @@ class _DashboardPageState extends State<DashboardPage> {
 
   String? payload;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Container(
         color: Colors.blueGrey,
         child: Column(
           children: [
-
 
             Padding(
               padding: EdgeInsets.only(left: 180, top: 50),
@@ -55,7 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.black12),
                     padding:
-                    MaterialStateProperty.all(EdgeInsets.only(right: 15)),
+                        MaterialStateProperty.all(EdgeInsets.only(right: 15)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.horizontal(
@@ -85,17 +85,15 @@ class _DashboardPageState extends State<DashboardPage> {
               },
             ),
             buidlCampusStream(),
-
-             SizedBox(height: 10.0),
-             buidlHostStream()
-
+            SizedBox(height: 10.0),
+            buidlHostStream()
           ],
         ),
       ),
     );
   }
 
-  buidlCampusStream(){
+  buidlCampusStream() {
     final database = Provider.of<Database>(context, listen: false);
     return StreamBuilder<List<Campuses>>(
       stream: database.CampusesStream(),
@@ -107,9 +105,8 @@ class _DashboardPageState extends State<DashboardPage> {
               color: Colors.red,
             ),
             key: Key('uni-${uni.id}'),
-
             child: Column(
-              children:[
+              children: [
                 CampusListTiles(
                     uni: uni,
                     onTap: () {
@@ -120,16 +117,15 @@ class _DashboardPageState extends State<DashboardPage> {
                         },
                       ));
                     }),
-
-
-
-              ],),
+              ],
+            ),
           ),
         );
       },
-    ) ;
+    );
   }
-  buidlHostStream(){
+
+  buidlHostStream() {
     final database = Provider.of<Database>(context, listen: false);
     return StreamBuilder<List<Hosts>>(
       stream: database.HostsStream(),
@@ -141,9 +137,8 @@ class _DashboardPageState extends State<DashboardPage> {
               color: Colors.red,
             ),
             key: Key('host-${host.id}'),
-
             child: Column(
-              children:[
+              children: [
                 HostsTiles(
                     host: host,
                     onTap: () {
@@ -154,38 +149,20 @@ class _DashboardPageState extends State<DashboardPage> {
                         },
                       ));
                     }),
-
-
-
-              ],),
+              ],
+            ),
           ),
         );
       },
-    ) ;
+    );
   }
 
-
   Widget _buildContent(BuildContext context) {
-
     return Container(
-
-
-
-
-
-            child:Column(
-              children: [
-
-            ],),
-
-
+      child: Column(
+        children: [],
+      ),
     );
-
-
-
-
-
-
   }
 
   _Alertcall() {
@@ -229,8 +206,6 @@ class _DashboardPageState extends State<DashboardPage> {
       },
     );
   }
-
-
 
 /*_search(String url) async {
     // final response = await http.Client().get(Uri.parse('https://www.mastersportal.com/search/master?kw-what=computer&kw-where=Pakistan'));

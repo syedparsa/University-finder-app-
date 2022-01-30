@@ -94,7 +94,7 @@ class HostDescriptionTiles extends StatelessWidget {
                                     final db = Provider.of<Database>(context,
                                         listen: false);
                                     if (auth.endUser!.savedcampIds != null) {
-                                      auth.endUser!.savedcampIds!.add(host.id!);
+                                      auth.endUser!.savedcampIds!.add(host.id);
                                     } else {
                                       auth.setEnduser(EndUser(
                                           email: auth.currentUser!.email!,

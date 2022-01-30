@@ -4,19 +4,19 @@ import 'package:dream_university_finder_app/Services/Auth.dart';
 import 'package:dream_university_finder_app/Services/Database.dart';
 import 'package:dream_university_finder_app/app/Home/models/user_Model.dart';
 import 'package:dream_university_finder_app/common_widgets/custom_Exception_alert.dart';
-import 'package:dream_university_finder_app/common_widgets/sign_in/Email_SignIn_BlocBased.dart';
 import 'package:dream_university_finder_app/common_widgets/sign_in/Sign_In_Manger.dart';
-import 'package:dream_university_finder_app/common_widgets/sign_in/sign_in_Button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({Key? key, required this.manger, required this.isLoading})
+   SignInPage({Key? key,this.db, required this.manger, required this.isLoading})
       : super(key: key);
   final SignInManger manger;
   final bool isLoading;
+  Database? db;
 
   static Widget create(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
@@ -35,6 +35,10 @@ class SignInPage extends StatelessWidget {
       ),
     );
   }
+
+
+
+
 
   void _showSignInError(BuildContext context, Exception exception) {
     if (exception is FirebaseAuthException &&
@@ -94,15 +98,104 @@ class SignInPage extends StatelessWidget {
     }
   }
 
-  void _SignInWithEmail(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        builder: (context) => SignInWithEmailFormsblocBased.create(context),
+
+
+
+  Future<bool> checkIfUserExists(String email) async {
+    final users = await db?.usersStream().first;
+    final allEmails = users?.map((user) => user.email).toList();
+    if (!allEmails!.contains(email)) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> canLogin(String email, bool isAdmin) async {
+    final users = await db!.usersStream().first;
+    final allUsers = users.map((user) => user).toList();
+    bool _isAdmin =
+    allUsers.where((user) => user.email == email).first.isAdmin!;
+    if (_isAdmin == isAdmin) {
+      return true;
+    }
+    return false;
+  }
+
+
+  Widget _buildHeader() {
+    if (isLoading) {
+      return SizedBox(
+        height: 80,
+        child: Center(
+            child: LoadingAnimationWidget.staggeredDotWave(
+              color: Colors.blueGrey,
+              size: 65,
+            )),
+      );
+    }
+    return SizedBox(
+      height: 80,
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Text(
+          ' Sign up!/Sign In\n  to continue',
+          style: TextStyle(fontSize: 15, color: Colors.grey,fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
+   Widget _buildContent(BuildContext context) {
+     return Padding(
+       padding: const EdgeInsets.all(16.0),
+       child: Column(
+         mainAxisAlignment: MainAxisAlignment.center,
+         crossAxisAlignment: CrossAxisAlignment.stretch,
+         children: [
+           SizedBox(height: 50.0, child: _buildHeader()),
 
+           const SizedBox(height: 48.0),
+           SocialLoginButton(
+             buttonType: SocialLoginButtonType.google,
+             onPressed:
+             isLoading ? () => null : () => _SignInWithGoogle(context),
+           ),
+           const SizedBox(height: 8.0),
+           //SocialSignInButton(
+           //text: 'Sign in with facebook',
+           //color: Color(0xFF334D92),
+           //textcolor: Colors.black87,
+           //onPressed: isLoading ? ()=> null: ()=>
+           //
+           SocialLoginButton(
+             buttonType: SocialLoginButtonType.facebook,
+             onPressed:
+             isLoading ? () => null : () => _SignInWithFacebook(context),
+
+             //assetName: 'images/facebook-logo.png',
+           ),
+
+
+           const SizedBox(height: 8.0),
+
+           const Text(
+             'or',
+             style: TextStyle(fontSize: 14.0, color: Colors.black),
+             textAlign: TextAlign.center,
+           ),
+           const SizedBox(height: 8.0),
+           SocialLoginButton(
+             text: 'Go anonymous',
+
+
+             onPressed:
+             isLoading ? () => null : () => _SignInAnonymously(context),
+              buttonType: SocialLoginButtonType.generalLogin,
+           ),
+         ],
+       ),
+     );
+   }
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SignInManger>(context, listen: false);
@@ -110,7 +203,7 @@ class SignInPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xff123456),
         title: const Text(
-          'My Education Portal',
+          'Dream University Finder',
           textAlign: TextAlign.center,
         ),
         elevation: 10.0,
@@ -120,78 +213,7 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(height: 50.0, child: _buildHeader()),
 
-          const SizedBox(height: 48.0),
-          SocialLoginButton(
-            buttonType: SocialLoginButtonType.google,
-            onPressed:
-                isLoading ? () => null : () => _SignInWithGoogle(context),
-          ),
-          const SizedBox(height: 8.0),
-          //SocialSignInButton(
-          //text: 'Sign in with facebook',
-          //color: Color(0xFF334D92),
-          //textcolor: Colors.black87,
-          //onPressed: isLoading ? ()=> null: ()=>
-          //
-          SocialLoginButton(
-            buttonType: SocialLoginButtonType.facebook,
-            onPressed:
-                isLoading ? () => null : () => _SignInWithFacebook(context),
 
-            //assetName: 'images/facebook-logo.png',
-          ),
 
-          const SizedBox(height: 8.0),
-          SignInButton(
-            text: 'Sign in with Email',
-            color: Colors.teal,
-            textcolor: Colors.black87,
-            onPressed: isLoading ? () => null : () => _SignInWithEmail(context),
-            borderRadius: 20,
-          ),
-          const SizedBox(height: 8.0),
-
-          const Text(
-            'or',
-            style: TextStyle(fontSize: 14.0, color: Colors.black),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8.0),
-          SignInButton(
-            text: 'Go anonymous',
-            color: Colors.lime,
-            textcolor: Colors.black87,
-            onPressed:
-                isLoading ? () => null : () => _SignInAnonymously(context),
-            borderRadius: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    return const Text(
-      'Sign in ',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 32.0,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
 }

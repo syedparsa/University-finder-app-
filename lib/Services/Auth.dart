@@ -23,6 +23,7 @@ abstract class AuthBase {
   Future<void> signOut();
 
   Future<void> deleteUserAccount();
+  Future<void> sendPasswordResetEmail(String email);
 
   EndUser? get endUser;
 }
@@ -45,6 +46,11 @@ class Auth implements AuthBase {
   @override
   Future<void> deleteUserAccount() async {
     await _fireAuth.currentUser!.delete();
+  }
+
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _fireAuth.sendPasswordResetEmail(email: email);
   }
 
   @override

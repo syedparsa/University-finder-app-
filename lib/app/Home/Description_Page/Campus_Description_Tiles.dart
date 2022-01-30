@@ -102,7 +102,7 @@ class CampusDescriptionTiles extends StatelessWidget {
                                     }
                                     db.setUser(
                                         auth.endUser!, auth.currentUser!.uid);
-                                    Hosts.isSavedChanged = true;
+                                    Campuses.isSavedChanged = true;
                                   },
                                   icon: FaIcon(FontAwesomeIcons.heart,color: Colors.red,
                                     semanticLabel: 'add to wishlist',

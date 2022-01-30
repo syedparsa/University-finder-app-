@@ -2,18 +2,20 @@ import 'package:flutter/cupertino.dart';
 
 class EndUser with ChangeNotifier {
   EndUser({
+    this.isAdmin,
     required this.email,
     this.savedcampIds,
     this.savedHostIds,
   });
 
   String? email;
-
+  bool? isAdmin;
   List<String?>? savedcampIds =[];
   List<String?>? savedHostIds = [];
 
   factory EndUser.fromMap(Map<String, dynamic> data, String documentId) {
     final String? email = data['email'];
+    final bool? isAdmin = data['isAdmin'];
 
     final List<String?>? savedcampIds = data['savedcampIds'] != null
         ? (data['savedcampIds'] as List).map((e) => e as String).toList()
@@ -25,11 +27,13 @@ class EndUser with ChangeNotifier {
       savedcampIds: savedcampIds,
       savedHostIds: saveduniIds,
       email: email,
+      isAdmin: isAdmin,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'isAdmin': isAdmin,
       'email': email,
       'savedcampIds': savedcampIds,
       'saveduniIds': savedHostIds

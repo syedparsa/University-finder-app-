@@ -8,6 +8,7 @@ import 'package:dream_university_finder_app/app/Home/models/Campus_Model.dart';
 import 'package:dream_university_finder_app/app/Home/models/Host_Models.dart';
 import 'package:dream_university_finder_app/app/Home/models/user_Model.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class WishListPage extends StatefulWidget {
@@ -21,11 +22,12 @@ class WishListPage extends StatefulWidget {
 class _WishListPageState extends State<WishListPage> {
   Stream<List<Campuses>> camplist = Stream.value([]);
   Stream<List<Hosts>> hostlist = Stream.value([]);
-  var _streamController = StreamController<List<Campuses>>();
+ /* var _streamController = StreamController<List<Campuses>>();*/
+  var _HoststreamController = StreamController<List<Hosts>>();
 
-   bool? isSaved;
+  bool? isSaved;
 
-   getFavcampus() async {
+/*  getFavcampus() async {
     final db = Provider.of<Database>(context, listen: false);
     var places = widget.user!.savedcampIds;
     if (places == null) return Stream.value([]);
@@ -33,10 +35,10 @@ class _WishListPageState extends State<WishListPage> {
 
     List<Campuses> newcampus =
         attractions.where((element) => places.contains(element.id!)).toList();
-     _streamController.sink.add(newcampus);
-  }
+    _streamController.sink.add(newcampus);
+  }*/
 
-  Future<Stream<List<Hosts>>> getFavHost() async {
+   getFavHost() async {
     final db = Provider.of<Database>(context, listen: false);
     var places = widget.user!.savedHostIds;
     if (places == null) return Stream.value([]);
@@ -44,21 +46,20 @@ class _WishListPageState extends State<WishListPage> {
 
     List<Hosts> newHost =
         attractions.where((element) => places.contains(element.id)).toList();
-    return Stream.value(newHost);
+    _HoststreamController.sink.add(newHost);
   }
-
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      await  getFavcampus();
-
+     /* await getFavcampus();*/
+      await getFavHost();
     });
   }
 
-  Widget _CampusStreambuilder(BuildContext context){
 
+  Widget _CampusStreambuilder(BuildContext context) {
     return StreamBuilder<List<Hosts>>(
       stream: this.hostlist,
       builder: (context, snapshot) {
@@ -66,16 +67,14 @@ class _WishListPageState extends State<WishListPage> {
           snapshot: snapshot,
           itembuilder: (context, host) => HostsTiles(
             host: host as Hosts,
-            onTap: () => () {
-
-            },
+            onTap: () => () {},
           ),
         );
       },
     );
   }
-Widget  _HostStreambuilder(BuildContext context) {
 
+  Widget _HostStreambuilder(BuildContext context) {
     return StreamBuilder<List<Hosts>>(
       stream: this.hostlist,
       builder: (context, snapshot) {
@@ -83,16 +82,14 @@ Widget  _HostStreambuilder(BuildContext context) {
           snapshot: snapshot,
           itembuilder: (context, host) => HostsTiles(
             host: host as Hosts,
-            onTap: () => () {
-
-            },
+            onTap: () => () {},
           ),
         );
       },
     );
-
   }
-  Widget _buildContents(BuildContext context) {
+
+  /*Widget _buildContents(BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -111,44 +108,65 @@ Widget  _HostStreambuilder(BuildContext context) {
         SizedBox(
           height: 15,
         ),
-
       ],
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
-    if (Campuses.isSavedChanged) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) async
-     {      await getFavcampus();
+  /*  if (Campuses.isSavedChanged) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) async {
+        await getFavcampus();
+      });
+      Campuses.isSavedChanged = false;
+    }*/
+
+     if (Hosts.isSavedChanged) {
+
+      WidgetsBinding.instance?.addPostFrameCallback((_) async {
+         await getFavHost();
 
       });
       Campuses.isSavedChanged = false;
     }
-
-   /* if (Hosts.isSavedChanged) {
-
-      WidgetsBinding.instance?.addPostFrameCallback((_) async {
-        var hostlist = await getFavHost();
-
-        setState(() {
-          this.hostlist = hostlist;
-        });
-      });
-      Campuses.isSavedChanged = false;
-    }*/
     return Scaffold(
-      appBar:AppBar (
-        centerTitle: true,
-          title: Text('Wish list')
-      ),
-      body: Column(children: [
+      backgroundColor: Colors.blueGrey,
+     appBar: AppBar(
+       backgroundColor: Colors.blueGrey.shade300,
+       centerTitle: true,
+       title: Text('Wish List'),
+     ),
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
 
-        _CampusStreambuilder(context),
-        _HostStreambuilder(context),
-        _buildContents(context)],),
+
+
+               /* Container(
+
+                   color: Colors.orange.shade100,
+                   child:_CampusStreambuilder(context),
+
+
+             ),
+
+
+               Container(
+
+                    color: Colors.green.shade100,
+                    child:_HostStreambuilder(context),
+
+
+              ),*/
+
+
+
+
+            ],
+          ),
+        ),
+      ),
     );
   }
-
-
 }

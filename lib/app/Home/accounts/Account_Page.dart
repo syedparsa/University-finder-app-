@@ -17,10 +17,7 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  double xoffset = 0;
-  double yoffset = 0;
-  double scalefactor = 1;
-  bool isdraweropen = false;
+
 
   Future<void> _Signout(BuildContext context) async {
     try {

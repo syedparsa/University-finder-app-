@@ -1,9 +1,10 @@
-import 'package:dream_university_finder_app/Services/AUTHBASE.dart';
+import 'package:dream_university_finder_app/Services/Auth.dart';
 import 'package:dream_university_finder_app/Services/Database.dart';
-import 'package:dream_university_finder_app/Services/User.dart';
-import 'package:dream_university_finder_app/common_widgets/sign_in/Validators.dart';
+import 'package:dream_university_finder_app/app/Home/models/user_Model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+
+import 'Validators.dart';
 
 
 enum EmailSignInFormType { signIn, register, forgotPassword }
@@ -21,7 +22,7 @@ class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
     this.name = '',
   });
 
-  final Base auth;
+  final AuthBase auth;
   String email;
   String password;
   EmailSignInFormType formType;
@@ -42,12 +43,12 @@ class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
       updateWith(isLoading: true);
       switch (formType) {
         case EmailSignInFormType.signIn:
-          await auth.signInWithEmailAndPassword(email, password, isAdmin);
+          await auth.SignInWithEmailPass(email, password, );
           await updateUser(db);
           break;
         case EmailSignInFormType.register:
-          await auth.createUserWithEmailAndPassword(
-              email, password, isAdmin, name);
+          await auth.RegisterUserWithEmail(
+              email, password, );
           if (ifExists != null && !ifExists) {
             await updateUser(db);
           }
@@ -64,12 +65,13 @@ class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
     }
   }
 
+
   Future<void> updateUser(Database db) async {
-    var user = MyUser(
-        isAdmin: this.isAdmin,
+    var user = EndUser(
+
         email: email,
-        name: auth.currentUser!.displayName);
-    auth.setMyUser(user);
+       );
+    auth.setEnduser(user);
   }
 
   void updateEmail(String email) => updateWith(email: email);
