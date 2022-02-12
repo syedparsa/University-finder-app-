@@ -28,7 +28,7 @@ class CampusDescriptionTiles extends StatelessWidget {
 
 
   launchURL(String url, String text) async {
-   /* print(url);
+    /*print(url);
     if (await canLaunch (url)) {
       await launch(url,
           enableJavaScript: true, forceSafariVC: false, enableDomStorage: true);
@@ -108,7 +108,23 @@ class CampusDescriptionTiles extends StatelessWidget {
                           child: InkWell(
                             child: Padding(
                                 padding: EdgeInsets.only(top: 2),
-                                child: IconButton(
+                                child: ElevatedButton.icon(
+
+
+                                  label: Text(
+                                    'Add to Wish list',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all(Colors.black),
+                                      padding:
+                                      MaterialStateProperty.all(EdgeInsets.only(left: 10,right: 10)),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20),
+
+                                              side: BorderSide(color: Colors.transparent)))),
+
                                   onPressed: () {
                                     final auth = Provider.of<AuthBase>(context,
                                         listen: false);
@@ -164,7 +180,7 @@ class CampusDescriptionTiles extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                uni.name!,
+                                uni.name!+'\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -172,7 +188,7 @@ class CampusDescriptionTiles extends StatelessWidget {
                                     fontStyle: FontStyle.italic),
                               ),
                               Text(
-                                uni.details!,
+                                uni.details!+'\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w200,
@@ -180,7 +196,7 @@ class CampusDescriptionTiles extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                uni.address!,
+                                uni.address!+'\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w200,
@@ -188,7 +204,7 @@ class CampusDescriptionTiles extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                uni.city!,
+                                uni.city!+'\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w200,
@@ -198,7 +214,7 @@ class CampusDescriptionTiles extends StatelessWidget {
                               Text(
                                 "Word_Ranking " +
                                     "   " +
-                                    uni.worldRanking!.toString(),
+                                    uni.worldRanking!.toString()+'\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w200,
@@ -208,7 +224,7 @@ class CampusDescriptionTiles extends StatelessWidget {
                               Text(
                                 "Country_Ranking " +
                                     "   " +
-                                    uni.CountryRanking!.toString(),
+                                    uni.CountryRanking!.toString()+'\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w200,

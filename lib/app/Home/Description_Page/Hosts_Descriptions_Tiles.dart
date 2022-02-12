@@ -29,8 +29,10 @@ class HostDescriptionTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey.shade300,
       appBar: AppBar(
-        title: Text(host.name+ '  '+'details'),
+        backgroundColor: Colors.blueGrey,
+        title: Text(host.name + '  ' + 'details'),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -39,19 +41,24 @@ class HostDescriptionTiles extends StatelessWidget {
             color: Colors.transparent,
             child: Column(
               children: [
+                SizedBox(height: 25),
                 InkWell(
                   onTap: onTap,
                   child: Container(
                     height: 400,
-                    decoration: host.imageurl!= null ? BoxDecoration(
+                    decoration: host.imageurl != null
+                        ? BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(host.imageurl!),
-                        fit: host.imageurl == null ? BoxFit.contain : BoxFit.cover,
+                        fit: host.imageurl == null
+                            ? BoxFit.contain
+                            : BoxFit.cover,
                       ),
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: shadowlist,
-                    ) : BoxDecoration(),
+                    )
+                        : BoxDecoration(),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -80,31 +87,65 @@ class HostDescriptionTiles extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         boxShadow: shadowlist,
-                        borderRadius: BorderRadius.circular(30)),
+                        borderRadius: BorderRadius.circular(20)),
                     child: Column(
                       children: [
                         Material(
                           child: InkWell(
                             child: Padding(
                                 padding: EdgeInsets.only(top: 2),
-                                child: IconButton(
+                                child: ElevatedButton.icon(
+                                  label: Text(
+                                    'Add to Wish list',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStateProperty.all(
+                                          Colors.black),
+                                      padding: MaterialStateProperty.all(
+                                          EdgeInsets.only(left: 10, right: 10)),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius
+                                                  .horizontal(
+                                                  left: Radius.elliptical(5, 5),
+                                                  right:
+                                                  Radius.elliptical(5, 5)),
+                                              side: BorderSide(
+                                                  color: Colors.transparent)))),
                                   onPressed: () {
                                     final auth = Provider.of<AuthBase>(context,
                                         listen: false);
                                     final db = Provider.of<Database>(context,
                                         listen: false);
-                                    if (auth.endUser!.savedcampIds != null) {
-                                      auth.endUser!.savedcampIds!.add(host.id);
+                                    print("zeeshan");
+                                    print(auth.endUser);
+
+                                    if (auth.endUser!.savedHostIds != null &&
+                                        auth.endUser!.savedHostIds!.length >
+                                            0) {
+                                      var hosts = auth.endUser!.savedHostIds!;
+                                      hosts.add(host.id);
+                                      auth.endUser!.savedHostIds = hosts;
                                     } else {
+                                      print("Adil");
+                                      print(auth.endUser);
                                       auth.setEnduser(EndUser(
                                           email: auth.currentUser!.email!,
-                                          savedcampIds: [host.id]));
+                                          savedHostIds: [host.id],
+                                      savedcampIds: auth.endUser!.savedcampIds!),
+                                      );
                                     }
                                     db.setUser(
+
                                         auth.endUser!, auth.currentUser!.uid);
                                     Hosts.isSavedChanged = true;
                                   },
-                                  icon: FaIcon(FontAwesomeIcons.heart,color: Colors.red,
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.heart,
+                                    color: Colors.red,
                                     semanticLabel: 'add to wishlist',
                                     size: 50,
                                   ),
@@ -112,7 +153,8 @@ class HostDescriptionTiles extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 40, top: 10, right: 40),
+                          padding:
+                          EdgeInsets.only(left: 40, top: 10, right: 40),
                           child: Text(
                             host.name,
                             style: TextStyle(
@@ -122,16 +164,14 @@ class HostDescriptionTiles extends StatelessWidget {
                                 shadows: shadowlist),
                           ),
                         ),
-
                       ],
                     ),
                   ),
                 ),
                 InkWell(
                   child: Container(
-
                     height: 400,
-                    margin: const EdgeInsets.only(top: 20,bottom: 50),
+                    margin: const EdgeInsets.only(top: 20, bottom: 50),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -141,11 +181,10 @@ class HostDescriptionTiles extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: Column(
-
                             children: [
                               SizedBox(height: 10),
                               Text(
-                                host.name,
+                                host.name + '\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -153,7 +192,7 @@ class HostDescriptionTiles extends StatelessWidget {
                                     fontStyle: FontStyle.italic),
                               ),
                               Text(
-                                host.details,
+                                host.details + '\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w200,
@@ -161,7 +200,7 @@ class HostDescriptionTiles extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                host.address,
+                                host.address + '\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w200,
@@ -169,14 +208,13 @@ class HostDescriptionTiles extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                host.Domain,
+                                host.Domain + '\n',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w200,
                                   fontSize: 20.0,
                                 ),
                               ),
-
                             ],
                           ),
                         ),

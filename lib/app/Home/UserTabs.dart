@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-enum Tabitems{Settings,Favourites,Universities}
+enum Tabitems{Dashboard, Favourites,Settings   }
 
 class TabItemData{
   const TabItemData({required this.title, required this.icon});
@@ -11,10 +11,9 @@ class TabItemData{
 
   static const Map<Tabitems,TabItemData>allTabs={
 
-    Tabitems.Settings:TabItemData(title: 'Settings', icon:Icons.settings),
+    Tabitems.Dashboard:TabItemData(title: 'Universities', icon:Icons.school),
     Tabitems.Favourites:TabItemData(title: 'Favourites', icon:Icons.favorite),
-    Tabitems.Universities:TabItemData(title: 'Universities', icon:Icons.school),
-
+    Tabitems.Settings:TabItemData(title: 'Settings', icon:Icons.settings),
 
 
   };

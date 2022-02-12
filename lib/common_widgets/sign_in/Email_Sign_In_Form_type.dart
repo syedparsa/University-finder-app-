@@ -43,15 +43,25 @@ class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
       updateWith(isLoading: true);
       switch (formType) {
         case EmailSignInFormType.signIn:
+          var users = await db.usersStream().first;
+          var u = users.where((element) => element.email == email);
+          bool? Admin;
+          if(u.length >0){
+            Admin=  u.elementAt(0).isAdmin;
+          }
+          if(Admin!){
           await auth.SignInWithEmailPass(email, password, );
-          await updateUser(db);
+          await updateUser(db);}
+          else{
+            return false;
+          }
           break;
         case EmailSignInFormType.register:
           await auth.RegisterUserWithEmail(
               email, password, );
-          if (ifExists != null && !ifExists) {
+
             await updateUser(db);
-          }
+
           break;
         case EmailSignInFormType.forgotPassword:
           await auth.sendPasswordResetEmail(email);
@@ -69,9 +79,10 @@ class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
   Future<void> updateUser(Database db) async {
     var user = EndUser(
 
-        email: email,
+        email: email,isAdmin: true
        );
     auth.setEnduser(user);
+    db.setUser(user, auth.currentUser!.uid);
   }
 
   void updateEmail(String email) => updateWith(email: email);
@@ -131,8 +142,8 @@ class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
 
   String? get secondaryButtonText {
     return <EmailSignInFormType, String>{
-      EmailSignInFormType.register: 'Already have an Account?',
-      EmailSignInFormType.signIn: "Don't have an account?",
+      EmailSignInFormType.register: 'Previous users?',
+      EmailSignInFormType.signIn: "Need an account?",
       EmailSignInFormType.forgotPassword: 'Back to SignIn',
     }[formType];
   }
@@ -157,7 +168,7 @@ class EmailSignInModel with EmailAndPasswordValidators, ChangeNotifier {
     return <EmailSignInFormType, String>{
       EmailSignInFormType.register: "Register",
       EmailSignInFormType.signIn: "Sign In",
-      EmailSignInFormType.forgotPassword: "Forget password",
+      EmailSignInFormType.forgotPassword: "Forgot Password",
     }[formType];
   }
 

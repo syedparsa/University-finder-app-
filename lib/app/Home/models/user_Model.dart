@@ -65,6 +65,6 @@ class EndUser with ChangeNotifier {
 
   @override
   String toString() {
-    return 'MyUser{email: $email,  savedcampIds: $savedcampIds, saveduniIds: $savedHostIds}';
+    return 'EndUser{email: $email,  savedcampIds: $savedcampIds, saveduniIds: $savedHostIds}';
   }
 }

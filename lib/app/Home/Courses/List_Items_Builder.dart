@@ -13,7 +13,6 @@ class ListItemBuilder<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     if (snapshot.hasData){
      final List<T> items=snapshot.data!;
-     print(items);
      if (items.isNotEmpty){
 
       return _buildList(items);

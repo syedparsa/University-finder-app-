@@ -88,7 +88,7 @@ class _EditCampusPageState extends State<EditCampusPage> {
       _imageUrl=widget.camp!.imageurl;
       _countrycode=widget.camp!.countrycode;
       _website=widget.camp!.website;
-      _url=widget.camp!.url;
+
 
     }
     String? url;
@@ -203,7 +203,8 @@ String? id ;
         } else {
 
           final camp = Campuses(
-            url: _url,
+
+
             website: _website,
             countrycode: _countrycode,
               imageurl: _imageUrl,
@@ -360,12 +361,7 @@ String? id ;
         value!.isNotEmpty ? null : 'web address can\'t be empty',
         onSaved: (value) => _website = value!,
       ),
-      TextFormField(
-        decoration: const InputDecoration(labelText: 'Country '),
-        validator: (value) =>
-        value!.isNotEmpty ? null : 'campus domain can\'t be empty',
-        onSaved: (value) => _url = value!,
-      ),
+
       TextFormField(
         decoration: const InputDecoration(labelText: 'Country '),
         validator: (value) =>

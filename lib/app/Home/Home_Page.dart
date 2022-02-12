@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     if (tabitems==_currenTab){
       navigatorkeys[tabitems]!.currentState!.popUntil((route) => route.isFirst);
     }else
-    
+
     {
    setState(()=> _currenTab=tabitems );
  }
@@ -57,11 +57,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop:() async => !await navigatorkeys[_currenTab]!.currentState!.maybePop() ,
-      child: CuppertinoScaffold(
-          currentTab: _currenTab, onSelect:_select,
-          widgetBuilders: widgetBuilders,
-        navigatorkeys: navigatorkeys,
+      onWillPop: ()async => false,
+      child: WillPopScope(
+        onWillPop:() async => !await navigatorkeys[_currenTab]!.currentState!.maybePop() ,
+        child: CuppertinoScaffold(
+            currentTab: _currenTab, onSelect:_select,
+            widgetBuilders: widgetBuilders,
+          navigatorkeys: navigatorkeys,
+        ),
       ),
     );
   }

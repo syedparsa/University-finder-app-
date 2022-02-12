@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -27,6 +28,8 @@ class _AccountPageState extends State<AccountPage> {
       );
 
       await auth.signOut();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('issssssAdminnnnnnnUniotafkjj');
     } catch (e) {
       print(e.toString());
     }

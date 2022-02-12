@@ -1,4 +1,7 @@
-class Hosts {
+import 'package:flutter/cupertino.dart';
+
+enum SearchByHosts  { name,  country }
+class Hosts with ChangeNotifier implements Comparable<Hosts>{
   Hosts({
     this.url,
     this.imageurl,
@@ -14,7 +17,7 @@ class Hosts {
     required this.emailid,
   });
 
-  static bool isSavedChanged = false;
+  static bool isSavedChanged = true;
 
   late final String? imageurl;
   final String Domain;
@@ -79,4 +82,10 @@ class Hosts {
       'Domain': Domain,
     };
   }
+
+
+@override
+int compareTo(Hosts other) {
+  return this.name.compareTo(other.name);
+}
 }

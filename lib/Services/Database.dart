@@ -55,7 +55,7 @@ abstract class Database {
 
   Stream<List<Entry>> jobentriesStream({Job? job});
 
-  Future<void> deleteUser(EndUser user, String uid);
+  Future<void> deleteUser(EndUser user,String uid);
 
   Future<void> setUser(EndUser user, String uid);
 
@@ -76,7 +76,7 @@ class FirestoreDatabase implements Database {
 //TODO:USER:
   @override
   Future<void> deleteUser(EndUser user, String uid) => _service.deleteData(
-        path: APIPATH.user(uid),
+        path: APIPATH.user(uid ),
       );
 
   @override

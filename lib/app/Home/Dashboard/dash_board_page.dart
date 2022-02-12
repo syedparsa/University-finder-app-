@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dream_university_finder_app/Services/Auth.dart';
 import 'package:dream_university_finder_app/Services/Database.dart';
 import 'package:dream_university_finder_app/app/Home/Campuses/Campus_List_Tiles.dart';
 import 'package:dream_university_finder_app/app/Home/Campuses/List_Items_Builder.dart';
@@ -12,6 +13,7 @@ import 'package:dream_university_finder_app/common_widgets/sign_in/sign_in_Butto
 import 'package:dream_university_finder_app/configuration/helper_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -30,66 +32,17 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: _buildHostStream(context),
+      body: Column(
+        children: [
+          Expanded(child: _buildHostStream(context)),
+          /*Expanded(child: _buildContents(context)),*/
+        ],
+      ),
     );
   }
 
-  /* buidlCampusStream() {
-    return  StreamBuilder<List<Campuses>>(
-      stream: CampusStream,
-      builder: (context, snapshot) {
-        return NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool scrolling) {
-            return <Widget>[TopScrollableBar(), SearchScrollablebar()];
-          },
-          body: ListItemBuilder(
-              snapshot: snapshot,
-              itembuilder: (context, uni) {
-                return CampusListTiles(
-                  uni: uni as Campuses,
-                  onTap: ()=>CampusDescriptionTiles(
-                    uni:uni, onTap: () {  },
-                  ),
-                );
-              }),
-        );
-      },
-    );
-  }
-
-  buidlHostStream() {
-    final database = Provider.of<Database>(context, listen: false);
-    return StreamBuilder<List<Hosts>>(
-      stream: database.HostsStream(),
-      builder: (context, snapshot) {
-        return ListItemBuilder<Hosts>(
-          snapshot: snapshot,
-          itembuilder: (context, host) => Dismissible(
-            background: Container(
-              color: Colors.red,
-            ),
-            key: Key('host-${host.id}'),
-            child: Column(
-              children: [
-                HostsTiles(
-                    host: host,
-                    onTap: () {
-                      Navigator.of(context, rootNavigator: true)
-                          .push(MaterialPageRoute(
-                        builder: (context) {
-                          return HostDescriptionTiles(host: host, onTap: () {});
-                        },
-                      ));
-                    }),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-*/
   _Alertcall() {
     AwesomeNotifications().isNotificationAllowed().then(
       (isAllowed) {
@@ -169,12 +122,16 @@ class _DashboardPageState extends State<DashboardPage> {
                 snapshot: snapshot,
                 itembuilder: (context, host) {
                   return HostsTiles(
-                    host: host as Hosts,
-                    onTap: () => HostDescriptionTiles(
-                      host: host,
-                      onTap: () {},
-                    ),
-                  );
+                      host: host as Hosts,
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true)
+                            .push(MaterialPageRoute(
+                          builder: (context) {
+                            return HostDescriptionTiles(
+                                host: host, onTap: () {});
+                          },
+                        ));
+                      });
                 }),
           );
         },
@@ -183,26 +140,35 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildContents(BuildContext context) {
+    final database = Provider.of<Database>(context, listen: false);
     return Container(
       color: Colors.blueGrey.shade300,
       child: StreamBuilder<List<Campuses>>(
-        stream: CampusStream,
+        stream: database.CampusesStream(),
         builder: (context, snapshot) {
-          return NestedScrollView(
-            headerSliverBuilder: (BuildContext context, bool scrolling) {
-              return <Widget>[TopScrollableBar(), SearchScrollablebar()];
-            },
-            body: ListItemBuilder(
-                snapshot: snapshot,
-                itembuilder: (context, uni) {
-                  return CampusListTiles(
-                    uni: uni as Campuses,
-                    onTap: () => CampusDescriptionTiles(
-                      uni: uni,
-                      onTap: () {},
-                    ),
-                  );
-                }),
+          return Container(
+            margin: EdgeInsets.all(25),
+            child: ListItemBuilder<Campuses>(
+              snapshot: snapshot,
+              itembuilder: (context, uni) => Dismissible(
+                background: Container(
+                  color: Colors.red,
+                ),
+                direction: DismissDirection.endToStart,
+                key: Key('uni-${uni.id}'),
+                child: CampusListTiles(
+                  uni: uni,
+                  onTap: () => {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      builder: (context) {
+                        return CampusDescriptionTiles(uni: uni, onTap: () {});
+                      },
+                    )),
+                  },
+                ),
+              ),
+            ),
           );
         },
       ),
@@ -225,7 +191,6 @@ class _DashboardPageState extends State<DashboardPage> {
               icon: Icon(
                 Icons.add_alert,
                 color: Colors.red.shade600,
-
               ),
               label: Text(
                 'Set Alert',
@@ -233,8 +198,8 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
-                  padding:
-                      MaterialStateProperty.all(EdgeInsets.only(left: 10,right: 10)),
+                  padding: MaterialStateProperty.all(
+                      EdgeInsets.only(left: 10, right: 10)),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.horizontal(
@@ -248,7 +213,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  _filterStream(String value) async {
+  _SearchValues(String value) async {
     value = value.trim();
 
     final db = Provider.of<Database>(context, listen: false);
@@ -261,9 +226,9 @@ class _DashboardPageState extends State<DashboardPage> {
             (element.country != null &&
                 element.country!.contains(value.toLowerCase())) ||
             element.countrycode!.toLowerCase().contains(value.toLowerCase()) ||
-            (element.url != null &&
+            (element.website != null &&
                 element.details!.length > 0 &&
-                element.website!.contains(value.toLowerCase())) ||
+                element.details!.contains(value.toLowerCase())) ||
             (element.city != null &&
                 element.city!.toLowerCase().contains(value.toLowerCase())))
         .toList();
@@ -273,7 +238,7 @@ class _DashboardPageState extends State<DashboardPage> {
     //_streamController.sink.add(filteredPlaces);
   }
 
-  _sortData() async {
+  _FilterMethod() async {
     final db = Provider.of<Database>(context, listen: false);
     var searchAble = await db.CampusesStream().first;
     searchAble.sort((a, b) {
@@ -319,7 +284,7 @@ class _DashboardPageState extends State<DashboardPage> {
           keyboardType: TextInputType.text,
           onChanged: (value) {
             WidgetsBinding.instance?.addPostFrameCallback((_) async {
-              await _filterStream(value);
+              await _SearchValues(value);
             });
           },
           placeholder: 'Search here ',
@@ -350,6 +315,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               onPressed: () {
                 showModalBottomSheet(
+                    backgroundColor: Colors.blueGrey.shade300,
                     context: context,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(
@@ -385,7 +351,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                           setState(() {
                                             ascendingSorting = value!;
                                           });
-                                          _sortData();
+                                          _FilterMethod();
                                         },
                                       ),
                                       Text('swipe right to choose filter')
@@ -416,7 +382,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     setState(() {
                                                       _sortByCampus = value!;
                                                     });
-                                                    _sortData();
+                                                    _FilterMethod();
                                                   },
                                                 ),
                                                 Text('Name')
@@ -435,7 +401,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     setState(() {
                                                       _sortByCampus = value!;
                                                     });
-                                                    _sortData();
+                                                    _FilterMethod();
                                                   },
                                                 ),
                                                 Text('Country')

@@ -1,4 +1,3 @@
-
 import 'package:dream_university_finder_app/Services/Auth.dart';
 import 'package:dream_university_finder_app/Services/Database.dart';
 
@@ -15,7 +14,9 @@ import 'package:social_login_buttons/social_login_buttons.dart';
 import 'Email_Sign_In_Form_type.dart';
 
 class InstituteSignInPage extends StatefulWidget {
-  const InstituteSignInPage({Key? key,  this.manger, this.model,  this.db, this.isLoading}) : super(key: key);
+  const InstituteSignInPage(
+      {Key? key, this.manger, this.model, this.db, this.isLoading})
+      : super(key: key);
   final SignInManger? manger;
   final EmailSignInModel? model;
   final bool? isLoading;
@@ -30,7 +31,7 @@ class InstituteSignInPage extends StatefulWidget {
           builder: (_, model, __) => InstituteSignInPage(
               model: model,
               db: db) //every time called when notify listener called
-      ),
+          ),
     );
   }
 
@@ -39,109 +40,85 @@ class InstituteSignInPage extends StatefulWidget {
 }
 
 class _InstituteSignInPageState extends State<InstituteSignInPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FocusScopeNode _node = FocusScopeNode();
 
+  EmailSignInModel? get model => widget.model;
 
-  
+  Database? get db => widget.db;
 
-   final TextEditingController _emailController = TextEditingController();
-   final TextEditingController _nameController = TextEditingController();
-   final TextEditingController _passwordController = TextEditingController();
-   final FocusScopeNode _node = FocusScopeNode();
+  bool? isLoading;
 
-   EmailSignInModel? get model => widget.model;
-
-   Database? get db => widget.db;
-
-
-   bool? isLoading;
-
-
-
-
-
-
-  void _showSignInError(BuildContext context,Exception exception){
-    if( exception is FirebaseAuthException && exception.code=='ERROR_ABORTED_BY_USER' ){
+  void _showSignInError(BuildContext context, Exception exception) {
+    if (exception is FirebaseAuthException &&
+        exception.code == 'ERROR_ABORTED_BY_USER') {
       return;
     }
     showExceptionAlert(
       context,
       title: 'Sign In Failed',
       exception: exception,
-
-
     );
   }
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _node.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
+  Future<bool> checkIfUserExists(String email) async {
+    final users = await db!.usersStream().first;
+    final allEmails = users.map((user) => user.email).toList();
+    if (!allEmails.contains(email)) {
+      return false;
+    }
+    return true;
+  }
 
-   @override
-   void dispose() {
-     _emailController.dispose();
-     _node.dispose();
-     _passwordController.dispose();
-     super.dispose();
-   }
-   Future<bool> checkIfUserExists(String email) async {
-     final users = await db!.usersStream().first;
-     final allEmails = users.map((user) => user.email).toList();
-     if (!allEmails.contains(email)) {
-       return false;
-     }
-     return true;
-   }
+  Future<bool> canLogin(String email, bool isAdmin) async {
+    final users = await db!.usersStream().first;
+    final allUsers = users.map((user) => user).toList();
+    bool _isAdmin =
+        allUsers.where((user) => user.email == email).first.isAdmin!;
+    if (_isAdmin == isAdmin) {
+      return true;
+    }
+    return false;
+  }
 
-   Future<bool> canLogin(String email, bool isAdmin) async {
-     final users = await db!.usersStream().first;
-     final allUsers = users.map((user) => user).toList();
-     bool _isAdmin =
-     allUsers.where((user) => user.email == email).first.isAdmin!;
-     if (_isAdmin == isAdmin) {
-       return true;
-     }
-     return false;
-   }
-   Future<void> _submit() async {
-     try {
-       bool success = false;
-       if (model!.formType == EmailSignInFormType.signIn) {
-         if (await checkIfUserExists(model!.email)) {
-           if (await canLogin(model!.email,model!.isAdmin)) {
-             success = await model!.submit(context);
-           } else {
-             Fluttertoast.showToast(msg: 'Unauthorized  attempt made!');
-           }
-         } else {
-           if (model!.isAdmin) {
-             Fluttertoast.showToast(msg: 'Unauthorized attempt!');
-           } else {
-             success = await model!.submit(context, ifExists: true);
-           }
-         }
-       } else {
-         success = await model!.submit(context);
-       }
-       if (success) {
-         if (model!.formType == EmailSignInFormType.forgotPassword) {
-           Fluttertoast.showToast(msg: 'Reset password link has been sent!');
-           _updateFormType(EmailSignInFormType.signIn);
-         }
-       }
-     } on Exception catch (e) {
-       _showSignInError(context, e);
-       _emailController.clear();
-       _passwordController.clear();
-       _nameController.clear();
-     }
-   }
+  Future<void> _submit() async {
+    try {
+      bool success = false;
+      if (model!.formType == EmailSignInFormType.signIn) {
+        success = await model!.submit(context);
+      } else {
+        success = await model!.submit(context);
+      }
+      if (success) {
+        if (model!.formType == EmailSignInFormType.forgotPassword) {
+          Fluttertoast.showToast(msg: 'Reset password link has been sent!');
+          _updateFormType(EmailSignInFormType.signIn);
+        }
+      }
+    } on Exception catch (e) {
+      _showSignInError(context, e);
+      _emailController.clear();
+      _passwordController.clear();
+      _nameController.clear();
+    }
+  }
 
-   void _updateFormType(EmailSignInFormType formType) {
-     model!.updateFormType(formType);
-     _emailController.clear();
-     _passwordController.clear();
-     _nameController.clear();
-   }
-
+  void _updateFormType(EmailSignInFormType formType) {
+    model!.updateFormType(formType);
+    _emailController.clear();
+    _passwordController.clear();
+    _nameController.clear();
+  }
 
   Widget _buildEmailTextField() {
     return TextFormField(
@@ -211,24 +188,21 @@ class _InstituteSignInPageState extends State<InstituteSignInPage> {
     );
   }
 
-   void _emailEditingComplete() {
-     if (model!.canSubmitEmail) {
-       _node.nextFocus();
-     }
-   }
+  void _emailEditingComplete() {
+    if (model!.canSubmitEmail) {
+      _node.nextFocus();
+    }
+  }
 
-   void _passwordEditingComplete() {
-     if (!model!.canSubmitEmail) {
-       _node.previousFocus();
-       return;
-     }
-     _submit();
-   }
+  void _passwordEditingComplete() {
+    if (!model!.canSubmitEmail) {
+      _node.previousFocus();
+      return;
+    }
+    _submit();
+  }
 
-
-
-
-   List<Widget> _buildChildren() {
+  List<Widget> _buildChildren() {
     return [
       if (model!.formType == EmailSignInFormType.register) ...<Widget>[
         _buildNameTextField(),
@@ -253,7 +227,7 @@ class _InstituteSignInPageState extends State<InstituteSignInPage> {
         SizedBox(height: 8.0),
         TextButton(
           child:
-          Text(model!.secondaryButtonText!, style: TextStyle(fontSize: 15)),
+              Text(model!.secondaryButtonText!, style: TextStyle(fontSize: 15)),
           onPressed: model!.isLoading
               ? null
               : () => _updateFormType(model!.secondaryActionFormType!),
@@ -266,67 +240,44 @@ class _InstituteSignInPageState extends State<InstituteSignInPage> {
               ? null
               : () => _updateFormType(EmailSignInFormType.forgotPassword),
         ),
-
-
     ];
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.blueGrey.shade300,
       body: Padding(
         padding: EdgeInsets.fromLTRB(16, 100, 16, 0),
         child: Center(
-
-
           child: Column(
-              children:[
-
-
-
-                Card(
-                  elevation: 5.0,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.grey.shade200, width: 1),
-                  ),
-                  color: Colors.white,
-                  borderOnForeground: true,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: AutofillGroup(
-                      onDisposeAction:
-                      model!.formType == EmailSignInFormType.forgotPassword
-                          ? AutofillContextAction.commit
-                          : AutofillContextAction.commit,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _buildChildren(),
-                      ),
+            children: [
+              Card(
+                elevation: 5.0,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.grey.shade200, width: 1),
+                ),
+                color: Colors.white,
+                borderOnForeground: true,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: AutofillGroup(
+                    onDisposeAction:
+                        model!.formType == EmailSignInFormType.forgotPassword
+                            ? AutofillContextAction.commit
+                            : AutofillContextAction.commit,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: _buildChildren(),
                     ),
                   ),
                 ),
-               
-
-
-              ],),
-
-
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-
-
-
-
-
-
-
 }

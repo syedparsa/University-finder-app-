@@ -19,17 +19,18 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
-  Tabitems _currenTab = Tabitems.Settings;
-  EndUser? end ;
+  Tabitems _currenTab = Tabitems.Dashboard;
+  EndUser? end;
 
-  _getuser() async{
-    final db = Provider.of<Database>(context, listen:false);
-    final manager = Provider.of<AuthBase>(context, listen:false);
+  _getuser() async {
+    final db = Provider.of<Database>(context, listen: false);
+    final manager = Provider.of<AuthBase>(context, listen: false);
     var user = EndUser(email: manager.currentUser!.email);
     var users = await db.usersStream().first;
-    var userr = users
-        .where((element) => element.email == manager.currentUser!.email);
-    if (userr.length == 1) {
+    var userr =
+        users.where((element) => element.email == manager.currentUser!.email);
+
+    if (userr.length > 0) {
       manager.setEnduser(userr.elementAt(0));
       setState(() {
         end = userr.elementAt(0);
@@ -46,14 +47,14 @@ class _UserHomePageState extends State<UserHomePage> {
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-     await _getuser();
+      await _getuser();
     });
   }
 
   final Map<Tabitems, GlobalKey<NavigatorState>> navigatorkeys = {
-    Tabitems.Settings: GlobalKey<NavigatorState>(),
+    Tabitems.Dashboard: GlobalKey<NavigatorState>(),
     Tabitems.Favourites: GlobalKey<NavigatorState>(),
-    Tabitems.Universities: GlobalKey<NavigatorState>(),
+    Tabitems.Settings: GlobalKey<NavigatorState>(),
   };
 
   void _select(Tabitems tabitems) {
@@ -65,13 +66,22 @@ class _UserHomePageState extends State<UserHomePage> {
   }
 
   Map<Tabitems, WidgetBuilder> get widgetBuilders {
-    final manger = Provider.of<AuthBase>(context, listen:false);
+    final manger = Provider.of<AuthBase>(context, listen: false);
+    _getuser();
 
     return {
-
-      Tabitems.Settings: (_) => const AccountPage(),
-      Tabitems.Favourites: (_) => WishListPage(user:end!),
-      Tabitems.Universities: (_) => DashboardPage(),
+      Tabitems.Dashboard: (_) => WillPopScope(
+            onWillPop: () async => false,
+            child: DashboardPage(),
+          ),
+      Tabitems.Favourites: (_) => WillPopScope(
+            onWillPop: () async => false,
+            child: WishListPage(user: end!),
+          ),
+      Tabitems.Settings: (_) => WillPopScope(
+            onWillPop: () async => false,
+            child: AccountPage(),
+          ),
     };
   }
 

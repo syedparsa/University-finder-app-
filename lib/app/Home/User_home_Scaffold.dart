@@ -29,9 +29,10 @@ class CuppertinoScaffold extends StatelessWidget {
         backgroundColor: primaryGreen,
         tabBar: CupertinoTabBar(
           items: [
-            _buildItems(Tabitems.Settings),
+            _buildItems(Tabitems.Dashboard),
             _buildItems(Tabitems.Favourites),
-            _buildItems(Tabitems.Universities),
+
+            _buildItems(Tabitems.Settings),
           ],
           onTap: (index) => onSelect(Tabitems.values[index]),
         ),

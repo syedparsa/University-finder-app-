@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
 class SignInPage extends StatelessWidget {
-   SignInPage({Key? key,this.db, required this.manger, required this.isLoading})
+   SignInPage({Key? key,this.db, required this.manager, required this.isLoading})
       : super(key: key);
-  final SignInManger manger;
+  final SignInManger manager;
   final bool isLoading;
   Database? db;
 
@@ -27,7 +27,7 @@ class SignInPage extends StatelessWidget {
           create: (_) => SignInManger(auth: auth, isLoading: isLoading),
           child: Consumer<SignInManger>(
             builder: (_, manger, __) => SignInPage(
-              manger: manger,
+              manager: manger,
               isLoading: isLoading.value,
             ),
           ),
@@ -54,7 +54,7 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _SignInAnonymously(BuildContext context) async {
     try {
-      await manger.signInAnonymously();
+      await manager.signInAnonymously();
     } on Exception catch (e) {
       _showSignInError(context, e);
     }
@@ -64,16 +64,16 @@ class SignInPage extends StatelessWidget {
     final db = Provider.of<Database>(context, listen: false);
 
     try {
-      await manger.signInWithGoogle();
-      var user = EndUser(email: manger.auth.currentUser!.email);
+      await manager.signInWithGoogle();
+      var user = EndUser(email: manager.auth.currentUser!.email);
       var users = await db.usersStream().first;
       var userr = users
-          .where((element) => element.email == manger.auth.currentUser!.email);
+          .where((element) => element.email == manager.auth.currentUser!.email);
       if (userr.length == 1) {
-        manger.auth.setEnduser(userr.elementAt(0));
+        manager.auth.setEnduser(userr.elementAt(0));
       } else {
-        manger.auth.setEnduser(user);
-        db.setUser(user, manger.auth.currentUser!.uid);
+        manager.auth.setEnduser(user);
+        db.setUser(user, manager.auth.currentUser!.uid);
       }
     } on Exception catch (e) {
       _showSignInError(context, e);
@@ -83,15 +83,16 @@ class SignInPage extends StatelessWidget {
   Future<void> _SignInWithFacebook(BuildContext context) async {
     final db = Provider.of<Database>(context, listen: false);
     try {
-      var user = EndUser(email: manger.auth.currentUser!.email);
+      await manager.FacebookLogIn();
+      var user = EndUser(email: manager.auth.currentUser!.email);
       var users = await db.usersStream().first;
       var userr = users
-          .where((element) => element.email == manger.auth.currentUser!.email);
+          .where((element) => element.email == manager.auth.currentUser!.email);
       if (userr.length == 1) {
-        manger.auth.setEnduser(userr.elementAt(0));
+        manager.auth.setEnduser(userr.elementAt(0));
       } else {
-        manger.auth.setEnduser(user);
-        db.setUser(user, manger.auth.currentUser!.uid);
+        manager.auth.setEnduser(user);
+        db.setUser(user, manager.auth.currentUser!.uid);
       }
     } on Exception catch (e) {
       _showSignInError(context, e);
@@ -101,7 +102,7 @@ class SignInPage extends StatelessWidget {
 
 
 
-  Future<bool> checkIfUserExists(String email) async {
+  Future<bool> PreviousUsercheck(String email) async {
     final users = await db?.usersStream().first;
     final allEmails = users?.map((user) => user.email).toList();
     if (!allEmails!.contains(email)) {
@@ -110,7 +111,7 @@ class SignInPage extends StatelessWidget {
     return true;
   }
 
-  Future<bool> canLogin(String email, bool isAdmin) async {
+  Future<bool> IsLoginAllowed(String email, bool isAdmin) async {
     final users = await db!.usersStream().first;
     final allUsers = users.map((user) => user).toList();
     bool _isAdmin =
